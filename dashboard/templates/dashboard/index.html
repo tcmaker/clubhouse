@@ -1,0 +1,91 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Your Profile</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h6>Name:</h6>
+          {{ member }}
+        </li>
+        <li class="list-group-item">
+          <h6>Address:</h6>
+          {{ member.address_lines | join:"<br>" }}
+        <li class="list-group-item">
+          <h6>Username:</h6>
+          {{ request.user.username }}
+        </li>
+        <li class="list-group-item text-right">
+          <small><a href="#">Update Profile</a></small>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Your Membership and Dues</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h6>Dues Plan:</h6>
+          {{membership.payment_plan }}, paid through {{membership.valid_through}}
+        </li>
+        {% if member.id == membership.membership_contact.id %}
+          <li class="list-group-item">
+            <h6>Payment Method:</h6>
+            {{membership.payment_method }}
+          </li>
+          <li class="list-group-item">
+            <h6>Members In Your Group/Household</h6>
+            {{ membership.member_set.count }} members, including yourself
+          </li>
+          <li class="list-group-item text-right">
+            <small><a href="#">Update Membership and Dues</a></small>
+          </li>
+        {% else %}
+          <li class="list-group-item">
+            <h6>Membership Contact:</h6>
+              {{ membership.membership_contact }}
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Member Storage</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Cubby:</strong> {{ cubby }}</li>
+        <li class="list-group-item"><strong>Green Tags:</strong> {{ green_tags.count }}</li>
+        <li class="list-group-item {{ red_tags.count|yesno:"list-group-item-danger," }}"><strong>Red Tags:</strong> {{ red_tags.count }}</li>
+        <li class="list-group-item text-right"><small><a href="">Manage your stored items</a></small></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Endorsements</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+
+        </li>
+        <li class="list-group-item text-right"><small><a href="">Learn about endorsements</a></small></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

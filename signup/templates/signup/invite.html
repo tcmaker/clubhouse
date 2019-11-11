@@ -1,0 +1,61 @@
+{% extends 'signup/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Invite a Household Member{% endblock %}
+
+{% block header_text %}Invite a Household Member{% endblock %}
+
+{% block content %}
+
+<p>
+  One more thing: all standard memberships come with a household membership
+  option, allowing two people residing at the same address to access the space.
+  The person with whom you share your membership have the same privileges and
+  responsibilities that you will soon have, with two important exceptions.
+</p>
+
+<ul>
+  <li>Only you will be allowed to vote in elections</li>
+  <li>Only you will be able to see or change your payment information.</p>
+</ul>
+
+<p>
+  If you have someone in mind, you can use the form below to send an
+  invitation to their email address. If you need some time to think it over,
+  you can always do it later.
+</p>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+
+  {{ form | crispy }}
+  <div class="form-group">
+    <input type="submit" value="Next" class="btn btn-primary">
+  </div>
+</form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+$(function() {
+  var displayOrHideForm = function() {
+    if ($('#id_send_invite').val() == 'now') {
+      $('#div_id_given_name').show();
+      $('#div_id_family_name').show();
+      $('#div_id_email').show();
+    } else {
+      $('#div_id_given_name').hide();
+      $('#div_id_family_name').hide();
+      $('#div_id_email').hide();
+    }
+  };
+
+  $('#id_send_invite').click(function() {
+    displayOrHideForm();
+  });
+
+  displayOrHideForm();
+});
+</script>
+{% endblock %}
