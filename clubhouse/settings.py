@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     # Mine
-    'membership.apps.MembershipConfig',
     'signup.apps.SignupConfig',
     'dashboard.apps.DashboardConfig',
     'storage.apps.StorageConfig',
