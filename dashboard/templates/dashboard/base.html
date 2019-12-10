@@ -34,7 +34,6 @@
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ request.user }}</a>
         <div class="dropdown-menu dropdown-menu-right">
           <a class="dropdown-item" href="">Change Password</a>
-          <a class="dropdown-item" href="">Change Password</a>
           <hr class="dropdown-divider">
           <a class="dropdown-item" href="{% url 'dashboard:signout' %}">Logout</a>
         </div>
@@ -51,23 +50,12 @@
         <ul class="nav flex-column">
           <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Endorsements</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
         </ul>
 
         <h6>Administrative</h6>
         <ul class="nav flex-column">
           <li class="nav-item"><a class="nav-link" href="{% url 'approvals:approval_index' %}">Signup Approvals</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Households</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Student Teams</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Discounts</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Dues Plans</a></li>
-        </ul>
-
-        <h6>Management</h6>
-        <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="/admin/">Admin Panel</a></li>
         </ul>
       </div>
     </nav>
