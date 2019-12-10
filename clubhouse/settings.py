@@ -144,10 +144,13 @@ EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 
+SERVER_EMAIL='stephen.vandahm@tcmaker.org'
 MANAGERS = os.environ['MANAGER_EMAILS'].split(',')
 # get rid of trailing '' if there's only one manager
 if len(MANAGERS) > 1 and MANAGERS[-1] == '':
     MANAGERS.pop()
+
+ADMINS = MANAGERS
 
 #### Heroku ####
 import django_heroku
