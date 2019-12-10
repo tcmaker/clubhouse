@@ -45,7 +45,7 @@ class Signup(models.Model):
         # Delete sensitive fields so they aren't stored in the DB
         for sensitive_key in ['password', 'password_confirmation']:
             if sensitive_key in cleaned_data:
-                del cleaned_data['sensistive_key']
+                del cleaned_data[sensistive_key]
 
         if not key in self.data:
             self.data[key] = {}
