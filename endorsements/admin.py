@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Capability, Endorsement
+
+admin.site.register(Capability)
+admin.site.register(Endorsement)

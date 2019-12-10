@@ -12,17 +12,20 @@ class Capability(models.Model):
         through_fields=('capability', 'recipient'),
     )
 
+    def __str__(self):
+        return self.name
+
 class Endorsement(models.Model):
     capability = models.ForeignKey(Capability, on_delete=models.CASCADE)
     recipient = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='recipient_set'
+        related_name='endorsements_received_set'
     )
     trainer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='trainer_set'
+        related_name='endorsements_granted_set'
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
