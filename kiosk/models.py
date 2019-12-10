@@ -45,15 +45,15 @@ class Signup(models.Model):
         if not key in self.data:
             self.data[key] = {}
 
-        del self.data[key]['password']
-        del self.data[key]['password_confirmation']
-
         for k, v in cleaned_data.items():
             # PhoneNumber objects aren't serializable, and I don't have time
             # to figure it out
             if isinstance(v, PhoneNumber):
                 v = str(v)
             self.data[key][k] = v
+
+        del self.data[key]['password']
+        del self.data[key]['password_confirmation']
 
     data = JSONField(default=dict)
 
