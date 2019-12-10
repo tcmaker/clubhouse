@@ -55,11 +55,15 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'localflavor',
     'crispy_forms',
+    'django_bootstrap_breadcrumbs',
 
     # Mine
-    'signup.apps.SignupConfig',
+    # 'signup.apps.SignupConfig',
     'dashboard.apps.DashboardConfig',
+    'kiosk.apps.KioskConfig',
+    'approvals.apps.ApprovalsConfig',
     'storage.apps.StorageConfig',
+    'endorsements.apps.EndorsementsConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,20 +98,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'clubhouse.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'django-clubhouse',
-#         'USER': 'stephen',
-#         'HOST': 'localhost'
-#     }
-# }
-
-
+AUTH_USER_MODEL='dashboard.User'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 

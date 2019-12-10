@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.timezone import now as tz_now
 from django.dispatch import receiver
-from membership.models import Member, Membership
+#from membership.models import Member, Membership
 from signup.managers import ActiveInviteManager, PendingApprovalManager
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, EmailMessage
@@ -17,8 +17,8 @@ class Applicant(models.Model):
     membership_activation_completed_at = models.DateTimeField(blank=True, null=True)
     application_rejected_at = models.DateTimeField(blank=True, null=True)
 
-    membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, blank=True, null=True)
-    member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True)
+    #membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, blank=True, null=True)
+    #member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True)
 
     data = HStoreField(default=dict)
 
@@ -53,8 +53,8 @@ class Applicant(models.Model):
         abstract = True
 
 class SignupProgress(Applicant):
-    membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, blank=True, null=True)
-    member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True)
+    #membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, blank=True, null=True)
+    #member = models.ForeignKey(Member, on_delete=models.SET_NULL, blank=True, null=True)
     payment_plan_collected_at = models.DateTimeField(blank=True, null=True)
     payment_info_collected_at = models.DateTimeField(blank=True, null=True)
     invitation_screen_passed_at = models.DateTimeField(blank=True, null=True)

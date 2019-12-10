@@ -5,9 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django import urls
-from ..models import SignupProgress, Invitation
-from ..forms import approval
-from .. import activation
+from .models import Signup
+from .forms import approval
+from . import activation
 
 from django.shortcuts import render
 

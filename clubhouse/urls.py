@@ -15,16 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 admin.site.site_header = "Clubhouse Admin"
 admin.site.site_title = "Clubhouse Admin"
 admin.site.index_title = "Clubhouse Admin"
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/dashboard/'), name="root_url"),
     path('dashboard/', include('dashboard.urls')),
-    path('signup/', include('signup.urls')),
-    path('storage/', include('storage.urls')),
-
+    # path('signup/', include('signup.urls')),
+    # path('storage/', include('storage.urls')),
+    path('kiosk/', include('kiosk.urls')),
+    path('approvals', include('approvals.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),

@@ -1,4 +1,5 @@
 {% load static %}
+{% load django_bootstrap_breadcrumbs %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,14 +11,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href= "{% static "css/dashboard.css" %}">
 
-  <title>{% block title %}{% endblock %} -- Twin Cities Maker</title>
+  <title>{% block title %}Sign In{% endblock %} -- Twin Cities Maker</title>
 </head>
 <body>
 
 <!-- Top Navigation -->
 <nav class='navbar navbar-dark fixed-top bg-dark navbar-expand-lg'>
   <div class="navbar-brand">
-    <a href="/dashboard"><img
+    <a href="/"><img
       class="d-inline-block align-top"
       src="{% static "img/logo-white-text.svg" %}"
       alt="Twin Cities Maker logo"
@@ -28,47 +29,69 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Storage<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Endorsements</a>
-      </li>
+    <ul class="navbar-nav ml-auto mr-4">
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ request.user }}</a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="">Change Password</a>
+          <a class="dropdown-item" href="">Change Password</a>
+          <hr class="dropdown-divider">
+          <a class="dropdown-item" href="{% url 'dashboard:signout' %}">Logout</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-md-12">
-      <h2 class="mb-4">{% block heading %}Dashboard{% endblock %}</h2>
-    </div>
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <h6>Your Membership</h6>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Endorsements</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
+        </ul>
+
+        <h6>Administrative</h6>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="{% url 'approvals:approval_index' %}">Signup Approvals</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Households</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Student Teams</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Discounts</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Dues Plans</a></li>
+        </ul>
+
+        <h6>Management</h6>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="row">
+        <div class="col-md-12 mt-2">
+          {% block breadcrumbs %}
+            {% clear_breadcrumbs %}
+            {% breadcrumb "Home" "/" %}
+          {% endblock %}
+          {% block breadcrumb_content %}
+            {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap4.html" %}
+          {% endblock %}
+          <h2 class="mb-2 mt-4">{% block heading %}Dashboard{% endblock %}</h2>
+        </div>
+      </div>
+      {% block content %}
+        <ul>
+          <li><a href="{% url 'membership:index' %}">Membership</a></li>
+        </ul>
+      {% endblock %}
+    </main>
   </div>
-
-  {% block content %}{% endblock %}
 </div>
-
-
-
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

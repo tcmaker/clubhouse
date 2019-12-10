@@ -1,7 +1,7 @@
 from django.utils.timezone import now as tz_now
 from django.utils.timezone import make_aware
 from django.db.transaction import atomic
-from membership.models import Member, Membership, PaymentPlan
+#from membership.models import Member, Membership, PaymentPlan
 from .models import Invitation
 import os, stripe, datetime
 

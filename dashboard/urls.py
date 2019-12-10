@@ -5,6 +5,8 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('activate', views.ActivateMembershipForm.as_view(), name='activate_membership'),
+    path('signout', views.signout, name='signout'),
     # path('account', views.AccountView.as_view(), name='account'),
     # path('contact', views.ContactView.as_view(), name='contact'),
     #

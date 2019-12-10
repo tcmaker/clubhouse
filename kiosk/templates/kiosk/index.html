@@ -1,0 +1,13 @@
+{% extends 'kiosk/base.html' %}
+{% block title %}Membership Signup{% endblock %}
+
+{% block header_text %}Join Twin Cities Maker{% endblock %}
+
+{% block content %}
+<p>
+  In reality, we'll want to write some welcome text here. It should thank
+  the prospective member for their interest and let them know what to expect
+  when filling out these forms.
+</p>
+<a class="btn btn-primary" href="{% url 'kiosk:account' %}">Get Started</a>
+{% endblock %}

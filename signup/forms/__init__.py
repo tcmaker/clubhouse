@@ -6,7 +6,7 @@ from phonenumber_field.formfields import PhoneNumberField
 from crispy_forms.helper import FormHelper
 from ..validators import validate_auth0_password
 
-from membership.models import PaymentPlan, SIGNUP_PAYMENT_METHODS
+# from membership.models import PaymentPlan, SIGNUP_PAYMENT_METHODS
 
 class AccountForm(forms.Form):
     def __init__(self, *args, **kwargs):

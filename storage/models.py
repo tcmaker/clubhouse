@@ -1,11 +1,11 @@
 from django.db import models
-from membership.models import Member
+from dashboard.models import User
 from django.utils.timezone import now as tz_now
 
 class Cubby(models.Model):
     aisle = models.CharField(max_length=5)
     identifier = models.CharField(max_length=5)
-    assignee = models.OneToOneField(Member, null=True, blank=True, on_delete=models.SET_NULL)
+    assignee = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name_plural = "cubbies"
@@ -29,7 +29,7 @@ RED_TAG_STATUSES = [
 
 class GreenTag(models.Model):
     title = models.CharField(max_length=100)
-    assignee = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='green_tags_issued')
+    assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='green_tags_issued')
     location = models.CharField(max_length=200)
     issued_at = models.DateTimeField(default=tz_now)
     description = models.TextField()
@@ -40,8 +40,8 @@ class GreenTag(models.Model):
 
 class RedTag(models.Model):
     title = models.CharField(max_length=100)
-    reporter = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='red_tags_created')
-    violator = models.ForeignKey(Member, null=True, blank=True, on_delete=models.SET_NULL, related_name='red_tag_violations')
+    reporter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='red_tags_created')
+    violator = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='red_tag_violations')
     location = models.CharField(max_length=200)
     description = models.TextField()
     issued_at = models.DateTimeField(default=tz_now)
