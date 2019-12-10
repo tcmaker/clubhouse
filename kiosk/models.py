@@ -20,7 +20,7 @@ class Signup(models.Model):
         try:
             return self.data['person']['given_name'] + ' ' + self.data['person']['family_name']
         except KeyError:
-            return 'Unknown (id #' + self.id + ')'
+            return 'Unknown (id #' + str(self.id) + ')'
 
     def address_lines(self):
         ret = [self.data['person']['address_street1']]

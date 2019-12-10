@@ -115,7 +115,7 @@ class ContactForm(forms.Form):
 class DuesForm(forms.Form):
     dues_plan = forms.ChoiceField(
         label="Dues Plan",
-        choices=dues_plans(),
+        choices=dues_plans,
     )
 
     # payment_method = forms.ChoiceField(

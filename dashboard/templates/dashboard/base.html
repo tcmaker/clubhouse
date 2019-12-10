@@ -14,7 +14,6 @@
   <title>{% block title %}Sign In{% endblock %} -- Twin Cities Maker</title>
 </head>
 <body>
-
 <!-- Top Navigation -->
 <nav class='navbar navbar-dark fixed-top bg-dark navbar-expand-lg'>
   <div class="navbar-brand">
@@ -72,10 +71,9 @@
           <h2 class="mb-2 mt-4">{% block heading %}Dashboard{% endblock %}</h2>
         </div>
       </div>
+      <hr>
       {% block content %}
-        <ul>
-          <li><a href="{% url 'membership:index' %}">Membership</a></li>
-        </ul>
+        This is the content block. Extend it to add your content.
       {% endblock %}
     </main>
   </div>
