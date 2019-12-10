@@ -42,6 +42,10 @@ class Signup(models.Model):
         return None
 
     def add_form_data(self, key, cleaned_data):
+        # Delete sensitive fields so they aren't stored in the DB
+        for sensitive_key in ['password', 'password_confirmation']:
+            del cleaned_data['sensistive_key']
+
         if not key in self.data:
             self.data[key] = {}
 
@@ -51,9 +55,6 @@ class Signup(models.Model):
             if isinstance(v, PhoneNumber):
                 v = str(v)
             self.data[key][k] = v
-
-        del self.data[key]['password']
-        del self.data[key]['password_confirmation']
 
     data = JSONField(default=dict)
 
