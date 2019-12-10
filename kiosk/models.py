@@ -42,15 +42,13 @@ class Signup(models.Model):
         return None
 
     def add_form_data(self, key, cleaned_data):
-        # Delete sensitive fields so they aren't stored in the DB
-        for sensitive_key in ['password', 'password_confirmation']:
-            if sensitive_key in cleaned_data:
-                del cleaned_data[sensitive_key]
-
         if not key in self.data:
             self.data[key] = {}
 
         for k, v in cleaned_data.items():
+            # prevent sensitive data from being stored in the database
+            if k in ['password', 'password_confirmation']:
+                continue
             # PhoneNumber objects aren't serializable, and I don't have time
             # to figure it out
             if isinstance(v, PhoneNumber):
