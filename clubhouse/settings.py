@@ -59,10 +59,12 @@ INSTALLED_APPS = [
     'django.contrib.admindocs',
 
     # Libraries
+    'django_extensions',
     'phonenumber_field',
     'localflavor',
     'crispy_forms',
     'django_bootstrap_breadcrumbs',
+    'mozilla_django_oidc',
 
     # Mine
     # 'signup.apps.SignupConfig',
@@ -83,6 +85,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'mozilla_django_oidc.middleware.SessionRefresh',
 ]
 
 ROOT_URLCONF = 'clubhouse.urls'
@@ -111,6 +115,10 @@ AUTH_USER_MODEL='dashboard.User'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
+AUTHENTICATION_BACKENDS = (
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+)
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -125,6 +133,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+OIDC_RP_IDP_SIGN_KEY = 'RS256'
+OIDC_OP_JWKS_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_czsw7uPCP/.well-known/jwks.json'
+OIDC_RP_CLIENT_ID = '7duemoeo2pmpm457ped57nbm9l'
+OIDC_RP_CLIENT_SECRET = '1pjknhu4igon65nutcvev681unj6rlnjfvhpq0a2k4c6u5ijmeds'
+
+OIDC_OP_AUTHORIZATION_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/oauth2/authorize'
+OIDC_OP_TOKEN_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/oauth2/token'
+OIDC_OP_USER_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/oauth2/userInfo'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
