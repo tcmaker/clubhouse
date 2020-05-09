@@ -22,6 +22,8 @@ admin.site.site_title = "Clubhouse Admin"
 admin.site.index_title = "Clubhouse Admin"
 
 urlpatterns = [
+    path('oidc/', include('mozilla_django_oidc.urls')),
+
     path('', RedirectView.as_view(url='/dashboard/'), name="root_url"),
     path('dashboard/', include('dashboard.urls')),
     # path('signup/', include('signup.urls')),
