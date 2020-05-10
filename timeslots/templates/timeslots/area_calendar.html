@@ -1,0 +1,99 @@
+{% extends 'timeslots/index.html' %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block heading %}
+  {{ area.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb area.name 'timeslots:area_calendar' area_id=area.id %}
+{% endblock %}
+
+{% block content %}
+<p>
+
+<p>
+  Use the calendar to look for openings in the {{ area.name }}. Selecting a
+  timeslot shows more information about the timeslot and gives you the chance
+  to claim it as your very own.
+</p>
+
+<p>
+  <strong>Remember:</strong>You can only book <em>one timeslot per day,</em>
+  but there is no limit to how many days you can come in.
+</p>
+
+<h5 class="mb-4">Current Openings</h5>
+
+<div id="script-warning" style="display:none;">oops</div>
+
+<div id="loading" style="display:none;">loading</div>
+
+<div id="calendar" data-area-id="{{ area }}"></div>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static "fullcalendar/packages/core/main.js" %}"></script>
+<script src="{% static "fullcalendar/packages/daygrid/main.js" %}"></script>
+<script src="{% static "fullcalendar/packages/timegrid/main.js" %}"></script>
+<script src="{% static "fullcalendar/packages/list/main.js" %}"></script>
+<script src="{% static "fullcalendar/packages/interaction/main.js" %}"></script>
+<script src="{% static "fullcalendar/packages/bootstrap/main.js" %}"></script>
+  <script>
+    function slugFromEvent(e) {
+      var slug = [
+        "{{ area.id}}-",
+        event.start.fullYear(),
+        event.start.getFullYear(),
+        event.start.getMonth(),
+        event.start.geDay(),
+        event.start.getHour(),
+        event.start.getMinutes(),
+        "-",
+        event.end.fullYear(),
+        event.end.getFullYear(),
+        event.end.getMonth(),
+        event.end.geDay(),
+        event.end.getHour(),
+        event.end.getMinutes()
+      ];
+      return slug.join("");
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        navLinks: true,
+        plugins: [ 'dayGrid', 'interaction', 'bootstrap', 'timeGrid', 'list'],
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+
+        // Load from server
+        events: {
+          url: '/timeslots/{{ area.id }}/events',
+          failure: function() {
+            document.getElementById('script-warning').style.display = 'block'
+          }
+        },
+        loading: function(bool) {
+          document.getElementById('loading').style.display =
+            bool ? 'block' : 'none';
+        },
+
+        eventClick: function(info) {
+            console.log(info.event.id);
+            window.location.href = "/timeslots/{{ area.id }}/" + info.event.id + "/"
+        }
+      });
+
+      calendar.render();
+    });
+  </script>
+{% endblock %}

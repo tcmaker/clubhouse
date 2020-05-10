@@ -1,0 +1,56 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block heading %}
+  {{ area.name }}
+{% endblock %}
+
+{% block content %}
+
+<div id="script-warning" style="display:none;">oops</div>
+
+<div id="calendar" data-area-id="{{ area }}"></div>
+
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static "fullcalendar/packages/core/main.js" %}"></script>
+  <script src="{% static "fullcalendar/packages/daygrid/main.js" %}"></script>
+  <script src="{% static "fullcalendar/packages/timegrid/main.js" %}"></script>
+  <script src="{% static "fullcalendar/packages/list/main.js" %}"></script>
+  <script src="{% static "fullcalendar/packages/interaction/main.js" %}"></script>
+  <script src="{% static "fullcalendar/packages/bootstrap/main.js" %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        navLinks: true,
+        plugins: [ 'dayGrid', 'interaction', 'bootstrap', 'timeGrid', 'list'],
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        }
+
+        eventClick: function(info) {
+          alert('Event: ' + info.event.title);
+          alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+          alert('View: ' + info.view.type);
+
+          // change the border color just for fun
+          info.el.style.borderColor = 'red';
+        }
+
+
+
+        // dateClick: function(e) {
+        //   // window.location.href = "/timeslots/{{ area.id }}/calendar/" + e.dateStr + "/"
+        //   calendar.
+        // }
+      });
+
+      calendar.render();
+    });
+  </script>
+{% endblock %}

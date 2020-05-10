@@ -18,6 +18,9 @@ gunicorn = "==19.9.0"
 django-bootstrap-breadcrumbs = "==0.9.1"
 docutils = "*"
 requests = "*"
+django = "*"
+mozilla-django-oidc = "*"
+django-extensions = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8.2"

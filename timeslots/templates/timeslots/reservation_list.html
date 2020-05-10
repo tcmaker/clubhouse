@@ -1,0 +1,22 @@
+{% extends 'timeslots/index.html' %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block heading %}
+  Your Reservations
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Reservations' 'timeslots:reservation_list' %}
+{% endblock %}
+
+{% block content %}
+  <ul class="list-group">
+    {% for reservation in reservations.all %}
+      <li>
+        <a href="/links/">
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

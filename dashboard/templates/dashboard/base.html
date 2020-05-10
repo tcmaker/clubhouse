@@ -11,7 +11,13 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href= "{% static "css/dashboard.css" %}">
 
-  <title>{% block title %}Sign In{% endblock %} -- Twin Cities Maker</title>
+  <!-- FullCalendar -->
+  <link rel="stylesheet" href="{% static "fullcalendar/packages/core/main.css" %}" />
+  <link rel="stylesheet" href="{% static "fullcalendar/packages/daygrid/main.css" %}"  />
+  <link rel="stylesheet" href="{% static "fullcalendar/packages/timegrid/main.css" %}"  />
+  <link rel="stylesheet" href="{% static "fullcalendar/packages/list/main.css" %}"  />
+
+  <title>{% block title %}Clubhouse{% endblock %} -- Twin Cities Maker</title>
 </head>
 <body>
 <!-- Top Navigation -->
@@ -45,15 +51,14 @@
   <div class="row">
     <nav class="col-md-2 d-none d-md-block bg-light sidebar">
       <div class="sidebar-sticky">
-        <h6>Your Membership</h6>
+        <h6>Timeslots</h6>
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Profile</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Your Endorsements</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'timeslots:reservation_list' %}">Reservations</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'timeslots:index' %}">Timeslots</a></li>
         </ul>
 
         <h6>Administrative</h6>
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="{% url 'approvals:approval_index' %}">Signup Approvals</a></li>
           <li class="nav-item"><a class="nav-link" href="/admin/">Admin Panel</a></li>
         </ul>
       </div>
@@ -61,6 +66,7 @@
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="row">
         <div class="col-md-12 mt-2">
+          <h2 class="mb-2 mt-4">{% block heading %}Dashboard{% endblock %}</h2>
           {% block breadcrumbs %}
             {% clear_breadcrumbs %}
             {% breadcrumb "Home" "/" %}
@@ -68,10 +74,19 @@
           {% block breadcrumb_content %}
             {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap4.html" %}
           {% endblock %}
-          <h2 class="mb-2 mt-4">{% block heading %}Dashboard{% endblock %}</h2>
         </div>
       </div>
-      <hr>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
       {% block content %}
         This is the content block. Extend it to add your content.
       {% endblock %}

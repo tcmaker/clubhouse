@@ -18,11 +18,16 @@ def signout(request):
 
 @login_required
 def index(request):
+    return render(request, 'dashboard/index.html', {
+    })
+
+@login_required
+def index_old(request):
     # Redirect to payment page unless membership is active
 
-    # TODO: move this check into a decorator
-    if not request.user.has_active_membership():
-        return redirect('/dashboard/activate')
+    # # TODO: move this check into a decorator
+    # if not request.user.has_active_membership():
+    #     return redirect('/dashboard/activate')
 
     # Membership Info
     household = None

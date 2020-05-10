@@ -1,86 +1,60 @@
 {% extends 'dashboard/base.html' %}
 
+{% block heading %}TC Maker Member Dashboard{% endblock %}
+
+<div class="row">
+  <div class="col-md-6">
+</div>
+
 {% block content %}
 <div class="row">
-  <div class="col-md-6 mb-4">
-    <div class="card">
-      <div class="card-header">
-        <h5>Your Profile</h5>
+  <div class="col-md-7">
+    <div class="card mb-4">
+      <div class="card-header">Welcome</div>
+      <div class="card-body">
+        <p>
+          This is the new Twin Cities Maker member dashboard. In time, you
+          will be able to manage your dues and contact information, report
+          broken tools, and meet all of your other bureaucratic needs. For the
+          time being, however, we're using it to gradually re-open the shop.
+        </p>
+        <a class="btn btn-primary" href="/timeslots">Reserve timeslots</a>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <h6>Name:</h6>
-          {{ request.user }}
-        </li>
-        <li class="list-group-item">
-          <h6>Address:</h6>
-          {{ member.address_lines | join:"<br>" }}
-        <li class="list-group-item">
-          <h6>Username:</h6>
-          {{ request.user.username }}
-        </li>
-        <li class="list-group-item text-right">
-          <small><a href="#">Update Profile</a></small>
-        </li>
-      </ul>
     </div>
-  </div>
 
-  <div class="col-md-6 mb-4">
-    {% if household %}
-      <div class="card">
-        <div class="card-header">
-          <h5>Your Membership</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <strong>Dues Plan:</strong> {{ household.dues_plan.name }}
-          </li>
-          <li class="list-group-item">
-            <strong>Paid Through:</strong> {{ household.valid_through }}
-          </li>
-        </ul>
-      </div>
-    {% endif %}
-  </div>
-</div>
+    <h4>Your Upcoming Reservations</h4>
+    <ul>
+    {% for reservation in request.user.reservation_set.all|dictsort:"timeslot.start_time" %}
+      <li><a href="/timeslots/reservations/{{ reservation.id }}">{{ reservation.timeslot.area.name }}: {{ reservation.timeslot.start_time }}</a></li>
 
-<div class="row">
-  <div class="col-md-6 mb-4">
-    <div class="card">
-      <div class="card-header">
-        <h5>Member Storage</h5>
+    {% empty %}
+      <div class="alert alert-secondary">
+        <em>You haven't reserved any timeslots yet. It's not too late to
+        <a href="/timeslots/">do something about that</a>!</em>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Cubby:</strong> {{ cubby }}</li>
-        <li class="list-group-item"><strong>Green Tags:</strong> {{ green_tags.count }}</li>
-        <li class="list-group-item {{ red_tags.count|yesno:"list-group-item-danger," }}"><strong>Red Tags:</strong> {{ red_tags.count }}</li>
-        <li class="list-group-item text-right"><small><a href="">Manage your stored items</a></small></li>
-      </ul>
-    </div>
+    {% endfor %}
   </div>
+  </ul>
+  <div class="col-md-3 offset-md-1">
+    <div class="card bg-info text-white mb-4">
+      <div class="card-header">The New Plan</div>
+      <div class="card-body">
+        <h5 class="card-title">How This Works</h5>
+        <p>
+          Until things settle down, you'll be able to reserve <strong>one time slot</strong>
+          per day, during which you will be able to work in a single area of
+          the shop. Each timeslot is <strong>two hours long</strong>. At the start of your
+          timeslot, your keyfob will be automatically activated, and you'll be able to enter
+          and the shop as normal. At the end of your timeslot, however, we'll lock
+          your keyfob until your next timeslot begins.
+        </p>
 
-  <div class="col-md-6 mb-4">
-    <div class="card">
-      <div class="card-header">
-        <h5>Endorsements</h5>
+        <p>
+          Please take the time to read our emergency rules, and don't hesitate
+          to contact us with your questions and concerns.
+        </p>
       </div>
-      <ul class="list-group list-group-flush">
-        {% for capability in request.user.capability_set.all %}
-        <li class="list-group-item">
-          <span class="badge badge-success" data-toggle="tooltip" data-placement="right" title="{{ capability.short_description }}">{{ capability }}</span>
-        </li>
-        {% endfor %}
-        <li class="list-group-item text-right"><small><a href="">Learn about endorsements</a></small></li>
-      </ul>
     </div>
   </div>
 </div>
-{% endblock %}
-{% block javascript %}
-<script>
-  $(function() {
-    $('[data-toggle="tooltip"]').tooltip();
-  });
-</script>
 {% endblock %}
