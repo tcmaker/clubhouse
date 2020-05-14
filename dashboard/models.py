@@ -20,7 +20,7 @@ class User(AbstractUser):
     def create_cognito_record(self, email_verified=False):
         client = boto3.client('cognito-idp')
         response = client.admin_create_user(
-            UserPoolId=os.environ('COGNITO_USER_POOL_ID'),
+            UserPoolId=os.environ['COGNITO_USER_POOL_ID'],
             Username=self.username,
             UserAttributes=[
                 {'Name': 'email', 'Value': self.email},
