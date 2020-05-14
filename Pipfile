@@ -19,9 +19,9 @@ django-bootstrap-breadcrumbs = "==0.9.1"
 docutils = "*"
 requests = "*"
 django = "*"
-mozilla-django-oidc = "*"
 django-extensions = "*"
 boto3 = "*"
+mozilla-django-oidc = {git = "https://github.com/vandahm/mozilla-django-oidc.git"}
 
 [requires]
 python_version = "3.8.2"
