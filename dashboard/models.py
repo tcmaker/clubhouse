@@ -35,6 +35,12 @@ class User(AbstractUser):
             UserAttributes=user_attributes,
             DesiredDeliveryMediums=['EMAIL']
         )
+        for attribute in response['User']['Attributes']:
+            if attribute['Name'] == 'sub':
+                self.sub = attribute['Value']
+                self.save()
+
+
         return response
 
     # def get_member_record(self):
