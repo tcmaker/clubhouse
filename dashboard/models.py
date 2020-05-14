@@ -14,6 +14,7 @@ class User(AbstractUser):
 
     #### Cognito ####
     def change_cognito_password(self, new_password):
+        client = boto3.client('cognito-idp')
         pass
 
     def create_cognito_record(self, email_verified=False):
