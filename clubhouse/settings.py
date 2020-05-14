@@ -117,6 +117,7 @@ AUTH_USER_MODEL='dashboard.User'
 
 AUTHENTICATION_BACKENDS = (
     'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -135,13 +136,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 OIDC_RP_IDP_SIGN_KEY = 'RS256'
-OIDC_OP_JWKS_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_czsw7uPCP/.well-known/jwks.json'
-OIDC_RP_CLIENT_ID = '7duemoeo2pmpm457ped57nbm9l'
-OIDC_RP_CLIENT_SECRET = '1pjknhu4igon65nutcvev681unj6rlnjfvhpq0a2k4c6u5ijmeds'
-
-OIDC_OP_AUTHORIZATION_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/oauth2/authorize'
-OIDC_OP_TOKEN_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/oauth2/token'
-OIDC_OP_USER_ENDPOINT = 'https://cognito-idp.us-east-1.amazonaws.com/oauth2/userInfo'
+OIDC_OP_JWKS_ENDPOINT = os.environ['COGNITO_OIDC_JWKS_ENDPOINT']
+OIDC_RP_CLIENT_ID = os.environ['COGNITO_CLIENT_ID']
+OIDC_RP_CLIENT_SECRET = os.environ['COGNITO_CLIENT_SECRET']
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['COGNITO_OIDC_AUTHORIZATION_ENDPOINT']
+OIDC_OP_TOKEN_ENDPOINT = os.environ['COGNITO_OIDC_TOKEN_ENDPOINT']
+OIDC_OP_USER_ENDPOINT = os.environ['COGNITO_OIDC_USER_ENDPOINT']
+OIDC_CREATE_USER = True
+OIDC_USE_NONCE=False
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
@@ -189,3 +191,18 @@ django_heroku.settings(locals())
 # Hack to get PostgreSQL to work on localhost
 if os.environ['SERVER_HOSTNAME'] == 'localhost':
     del DATABASES['default']['OPTIONS']['sslmode']
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
