@@ -24,8 +24,8 @@ class User(AbstractUser):
             Username=self.username,
             UserAttributes=[
                 {'Name': 'email', 'Value': self.email},
-                {'Name': 'family_name', 'Value': self.family_name},
-                {'Name': 'given_name', 'Value': self.given_name},
+                {'Name': 'family_name', 'Value': self.last_name},
+                {'Name': 'given_name', 'Value': self.first_name},
                 {'Name': 'preferred_username', 'Value': self.username},
                 {'Name': 'email_verified', 'Value': email_verified},
             ],
