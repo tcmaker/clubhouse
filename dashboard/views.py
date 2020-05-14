@@ -8,19 +8,29 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import rest_actions
 from django.utils.dateparse import parse_datetime
+from from mozilla_django_oidc.views import OIDCLogoutView as MozillaLogoutView
 
 import stripe, os, datetime
 
-@login_required
-def signout(request):
-    logout(request)
-    return redirect('/dashboard')
+from django.conf import settings
+
+class OIDCLogoutView(MozillaLogoutView):
+    def get(self, request):
+        return self.post(request)
+
+def login(request):
+    if request.user.is_authenticated():
+        return redirect('/dashboard')
+
+    # Initialze the OIDC view
+    return redirect('/oidc/authenticate')
+
+
 
 # @login_required
 def index(request):
-    if not request.user.is_authenticated:
-        return redirect('/oidc/authenticate')
-
+    # if not request.user.is_authenticated:
+    #     return redirect('/oidc/authenticate')
     return render(request, 'dashboard/index.html', {
     })
 
