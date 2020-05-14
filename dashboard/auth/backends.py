@@ -3,7 +3,7 @@ from ..models import User
 
 class CognitoAuthenticationBackend(OIDCAuthenticationBackend):
     def filter_users_by_claims(self, claims):
-        email = claims.get('sub')
+        sub = claims.get('sub')
         if not sub:
             return self.UserModel.objects.none()
 
