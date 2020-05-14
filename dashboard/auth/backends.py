@@ -1,5 +1,6 @@
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from ..models import User
+import requests
 
 class CognitoAuthenticationBackend(OIDCAuthenticationBackend):
     def filter_users_by_claims(self, claims):
