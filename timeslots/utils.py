@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 from calendar import HTMLCalendar
-from .models import Timeslot, SLUG_STRFTIME_FORMAT
+from .models import Timeslot, SLUG_STRFTIME_FORMAT, LENGTH_OF_TIMESLOT
 from workshop.models import Area
 from collections import deque
 
@@ -29,7 +29,7 @@ def get_timeslots_for_range(area, start_time, end_time):
         # if time_counter.day == 11 and time_counter.hour == 4:
         #     import code; code.interact(local=dict(globals(), **locals()))
 
-        timeslot_end_time = time_counter + timedelta(hours=2)
+        timeslot_end_time = time_counter + timedelta(hours=LENGTH_OF_TIMESLOT)
 
         print(timeslot_end_time)
         # Does the timeslot already exist?

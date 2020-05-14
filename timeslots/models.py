@@ -9,6 +9,8 @@ SLUG_STRFTIME_FORMAT = "%Y%m%d%H%M"
 HUMANIZED_TIME_FORMAT = "%-I:%M %p"
 HUMANIZED_DATE_FORMAT = "%h %d, %Y"
 
+LENGTH_OF_TIMESLOT = 3
+
 MEMBER_MAX_DAILY_TIMESLOTS = 1
 
 class Timeslot(models.Model):
@@ -25,7 +27,7 @@ class Timeslot(models.Model):
 
     # set slug on save
     def save(self, *args, **kwargs):
-        self.end_time = self.start_time + timedelta(hours=2)
+        self.end_time = self.start_time + timedelta(hours=LENGTH_OF_TIMESLOT)
 
         slug = [
             str(self.area.id),
@@ -34,8 +36,8 @@ class Timeslot(models.Model):
         ]
         self.slug = "-".join(slug)
 
-        if (self.start_time.hour % 2 != 0):
-            raise DataError('Timeslots cannot have odd-numbered hours')
+        if (self.start_time.hour % LENGTH_OF_TIMESLOT != 0):
+            raise DataError('Timeslots must be divisible by LENGTH_OF_TIMESLOT')
 
         if (self.start_time.minute != 0 or self.start_time.second != 0):
             raise DataError('Timeslots must start at the beginning of the hour')
@@ -74,6 +76,7 @@ class Reservation(models.Model):
         total = Reservation.objects
         total = total.filter(timeslot__start_time__date=self.timeslot.start_time.date())
         total = total.filter(member_id=self.member.id).count()
+        return total < 1
 
 
         # import code; code.interact(local=dict(globals(), **locals()))
