@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from . import rest_actions
 from django.utils.translation import ugettext_lazy as _
-import boto3
+import boto3, os
 
 class User(AbstractUser):
     member_identifier = models.UUIDField(null=True, blank=True)
