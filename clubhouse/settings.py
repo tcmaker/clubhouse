@@ -116,7 +116,7 @@ AUTH_USER_MODEL='dashboard.User'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTHENTICATION_BACKENDS = (
-    'dashboard.auth.backends.CognitoAuthenticationBackend'
+    'dashboard.auth.backends.CognitoAuthenticationBackend',
     'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
 )
 
