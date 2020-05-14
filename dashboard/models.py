@@ -18,17 +18,21 @@ class User(AbstractUser):
         pass
 
     def create_cognito_record(self, email_verified=False):
+        user_attributes =[
+            {'Name': 'email', 'Value': self.email},
+            {'Name': 'family_name', 'Value': self.last_name},
+            {'Name': 'given_name', 'Value': self.first_name},
+            {'Name': 'preferred_username', 'Value': self.username},
+        ]
+
+        if (email_verified):
+            user_attributes.append({'Name': 'email_verified', 'Value': email_verified})
+
         client = boto3.client('cognito-idp')
         response = client.admin_create_user(
             UserPoolId=os.environ['COGNITO_USER_POOL_ID'],
             Username=self.username,
-            UserAttributes=[
-                {'Name': 'email', 'Value': self.email},
-                {'Name': 'family_name', 'Value': self.last_name},
-                {'Name': 'given_name', 'Value': self.first_name},
-                {'Name': 'preferred_username', 'Value': self.username},
-                {'Name': 'email_verified', 'Value': email_verified},
-            ],
+            UserAttributes=user_attributes,
             DesiredDeliveryMediums=['EMAIL']
         )
         return response
