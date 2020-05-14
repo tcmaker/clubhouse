@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from . import rest_actions
-#from django.contrib.auth.base_user import AbstractBaseUser(models.Model):
 
 class User(AbstractUser):
     member_identifier = models.UUIDField(null=True, blank=True)

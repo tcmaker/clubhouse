@@ -28,8 +28,11 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     # path('signup/', include('signup.urls')),
     # path('storage/', include('storage.urls')),
-    path('kiosk/', include('kiosk.urls')),
-    path('approvals', include('approvals.urls')),
+    path('timeslots/', include('timeslots.urls')),
+
+
+    # path('kiosk/', include('kiosk.urls')),
+    # path('approvals', include('approvals.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),

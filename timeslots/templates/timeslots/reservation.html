@@ -1,0 +1,48 @@
+{% extends 'timeslots/timeslot_detail.html' %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb "Reservation" 'timeslots:reservation_form' area_id=area.id slug=timeslot.slug %}
+{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block heading %}
+  Reserve a Timeslot
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <h4>One Last Thing</h4>
+    <p>
+      Before you do this, <em>please</em> read the new rules.
+    </p>
+
+    <div class="card bg-light">
+      <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form | crispy }}
+        <div class="form-group">
+          <input type="submit" value="Make Reservation" class="btn btn-primary">
+        </div>
+      </form>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-md-6 mb-4">
+    <div class="alert alert-info" role="alert">
+      <h4>{{ area.name }} COVID-19 Policies</h4>
+      <p>
+        Until we determine it is safe, only {{ area.covid19_capacity }}
+        pe{{ area.covid19_capacity|pluralize:"rson is,ople are" }} allowed to
+        work in the {{ area.name }} at any given time.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

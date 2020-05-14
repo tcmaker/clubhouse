@@ -1,0 +1,35 @@
+{% extends 'timeslots/reservation_detail.html' %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb "Reservation" 'timeslots:reservation_cancel' reservation_id=reservation.id %}
+{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block heading %}
+  Cancel Your Reservation
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-4 offset-md-3 mb-4">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title">Are you sure?</h5>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form | crispy }}
+        <div class="form-group">
+          <input type="submit" value="Delete Reservation" class="btn btn-danger">&nbsp;&nbsp;
+          <a class="btn btn-secondary" href="/timeslots/reservations/{{ reservation.id }}">Go Back</a>
+        </div>
+      </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

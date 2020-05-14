@@ -11,6 +11,16 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
+
+# Overrides to make messages framework work with Bootstrap classes
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -59,10 +69,12 @@ INSTALLED_APPS = [
     # Mine
     # 'signup.apps.SignupConfig',
     'dashboard.apps.DashboardConfig',
-    'kiosk.apps.KioskConfig',
-    'approvals.apps.ApprovalsConfig',
-    'storage.apps.StorageConfig',
-    'endorsements.apps.EndorsementsConfig',
+    # 'kiosk.apps.KioskConfig',
+    # 'approvals.apps.ApprovalsConfig',
+    # 'storage.apps.StorageConfig',
+    # 'endorsements.apps.EndorsementsConfig',
+    'timeslots.apps.TimeslotsConfig',
+    'workshop.apps.WorkshopConfig',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +154,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/Chicago'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False # In our use case, this causes more problems than it solves.
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

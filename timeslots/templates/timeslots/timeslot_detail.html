@@ -1,0 +1,52 @@
+{% extends 'timeslots/area_calendar.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb timeslot.start_time|date:"F j, Y: g:i a" 'timeslots:timeslot_detail' area_id=area.id slug=timeslot.slug %}
+{% endblock %}
+
+
+{% block heading %}
+  {{ timeslot.start_time|date:"F j, Y: g:i a"}} &ndash; {{ timeslot.end_time|date:"g:i a" }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    {% if timeslot.has_capacity %}
+      <div class="card bg-light">
+        <div class="card-header">Timeslot</div>
+        <div class="card-body">
+          <h5 class="card-title">Hurray!</h5>
+          <p>This timeslot has openings. Would you like to reserve it?</p>
+          <div class="row">
+            <div class="col-sm-3 mb-4">
+              <a href="{% url 'timeslots:reservation_form' area.id timeslot.slug %}" class="btn btn-lg btn-primary">Yes!</a>
+            </div>
+            <div class="col-sm-3 mb-4">
+              <a href="/timeslots/{{ area.id }}/" class="btn btn-lg btn-secondary">back to calendar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <h3>This Timeslot is full.</h3>
+      <br>
+      <a href="/timeslots/{{ area.id }}/" class="btn btn-lg btn-secondary">back to calendar</a>
+
+    {% endif %}
+  </div>
+  <div class="col-md-5 offset-md-1 mb-4">
+    <div class="alert alert-info" role="alert">
+      <h4>{{ area.name }} COVID-19 Policies</h4>
+      <p>
+        Until we determine it is safe, only {{ area.covid19_capacity }}
+        pe{{ area.covid19_capacity|pluralize:"rson is,ople are" }} allowed to
+        work in the {{ area.name }} at any given time.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

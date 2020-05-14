@@ -1,0 +1,45 @@
+{% extends 'timeslots/reservation_list.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Reservation Details' 'timeslots:reservation_detail' reservation_id=reservation.id %}
+{% endblock %}
+
+
+{% block heading %}
+  {{ reservation.timeslot.area.name }} Reservation
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card bg-light">
+        <div class="card-header">
+          Details
+        </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Shop Area:</strong> {{ reservation.timeslot.area.name }}</li>
+            <li class="list-group-item"><strong>Start Time:</strong> {{ reservation.timeslot.start_time }}</li>
+            <li class="list-group-item"><strong>End Time:</strong> {{ reservation.timeslot.end_time }}</li>
+          </ul>
+
+          <div class="card-body">
+            <a href="/timeslots/reservations/{{ reservation.id }}/cancel" class="card-link">Cancel reservation</a>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-5 offset-md-1">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Can't make it?</h5>
+
+          <p>
+            Shop time is a scarce resource that we all have to share, so
+            we ask that you cancel your reservation if you can't make it work.
+          </p>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

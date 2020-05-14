@@ -1,0 +1,13 @@
+{% extends 'dashboard/base.html' %}
+
+{% block heading %}
+  Register for Timeslots
+{% endblock %}
+
+{% block content %}
+
+{% for area in areas %}
+  <a href="{% url 'timeslots:area_calendar' area.id %}">{{ area.name }}</a>
+{% endfor %}
+
+{% endblock %}
