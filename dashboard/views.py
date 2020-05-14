@@ -16,8 +16,11 @@ def signout(request):
     logout(request)
     return redirect('/dashboard')
 
-@login_required
+# @login_required
 def index(request):
+    if not request.user.is_authenticated:
+        return redirect('/oidc/authenticate')
+
     return render(request, 'dashboard/index.html', {
     })
 
