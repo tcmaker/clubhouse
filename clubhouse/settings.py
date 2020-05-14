@@ -116,8 +116,8 @@ AUTH_USER_MODEL='dashboard.User'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTHENTICATION_BACKENDS = (
+    'dashboard.auth.backends.CognitoAuthenticationBackend'
     'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend',
 )
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -144,7 +144,9 @@ OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['COGNITO_OIDC_AUTHORIZATION_ENDPOINT
 OIDC_OP_TOKEN_ENDPOINT = os.environ['COGNITO_OIDC_TOKEN_ENDPOINT']
 OIDC_OP_USER_ENDPOINT = os.environ['COGNITO_OIDC_USER_ENDPOINT']
 OIDC_CREATE_USER = True
-OIDC_USE_NONCE=False
+OIDC_USE_NONCE=True
+
+COGNITO_USER_POOL_ID=os.environ['COGNITO_USER_POOL_ID']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
