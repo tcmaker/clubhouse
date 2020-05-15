@@ -1,5 +1,5 @@
 from django.db import models
-from dashboard.models import User
+from accounts.models import User
 
 class Capability(models.Model):
     name = models.CharField(max_length=50)

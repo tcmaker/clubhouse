@@ -24,4 +24,4 @@ boto3 = "*"
 mozilla-django-oidc = {git = "https://github.com/vandahm/mozilla-django-oidc.git"}
 
 [requires]
-python_version = "3.7.6"
+python_version = "3.6.9"

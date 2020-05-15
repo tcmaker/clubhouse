@@ -1,5 +1,5 @@
 from django.db import models
-from dashboard.models import User
+from accounts.models import User
 from django.utils.timezone import now as tz_now
 
 class Cubby(models.Model):

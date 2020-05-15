@@ -14,21 +14,6 @@ import stripe, os, datetime
 
 from django.conf import settings
 
-class OIDCLogoutView(MozillaLogoutView):
-    def get(self, request):
-        # import code; code.interact(local=dict(globals(), **locals()))
-        return self.post(request)
-
-def login(request):
-#    import code; code.interact(local=dict(globals(), **locals()))
-    if request.user.is_authenticated:
-        return redirect('/dashboard')
-
-    # Initialze the OIDC view
-    return redirect('/oidc/authenticate')
-
-
-
 @login_required
 def index(request):
     # if not request.user.is_authenticated:
