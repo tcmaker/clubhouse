@@ -24,17 +24,10 @@ admin.site.index_title = "Clubhouse Admin"
 urlpatterns = [
     path('oidc/', include('mozilla_django_oidc.urls')),
 
-    path('', RedirectView.as_view(url='/dashboard/'), name="root_url"),
+    path('', include('landing.urls')),
+    path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
-    # path('signup/', include('signup.urls')),
-    # path('storage/', include('storage.urls')),
     path('timeslots/', include('timeslots.urls')),
-
-
-    # path('kiosk/', include('kiosk.urls')),
-    # path('approvals', include('approvals.urls')),
-
-    # path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
 
