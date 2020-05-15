@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from phonenumber_field.phonenumber import PhoneNumber # FML
-from dashboard.models import User as DashboardUser
+from accounts.models import User as DashboardUser
 from .managers import PendingApprovalManager
 from .rest_actions import get_dues_plan
 

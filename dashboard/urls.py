@@ -6,8 +6,8 @@ app_name = 'dashboard'
 urlpatterns = [
     path('', views.index, name='index'),
     # path('activate', views.ActivateMembershipForm.as_view(), name='activate_membership'),
-    path('signout', views.OIDCLogoutView.as_view(), name='signout'),
-    path('login/', views.login, name="login"),
+    #path('signout', views.OIDCLogoutView.as_view(), name='signout'),
+    #path('login/', views.login, name="login"),
     # path('account', views.AccountView.as_view(), name='account'),
     # path('contact', views.ContactView.as_view(), name='contact'),
     #

@@ -4,7 +4,7 @@ from django.db.transaction import atomic
 # from membership.models import Member, Membership, PaymentPlan
 import os, stripe, datetime
 from . import rest_actions
-from dashboard.models import User
+from accounts.models import User
 
 def approve_signup(signup, keyfob_code):
     signup.data['person']['member_since'] = str(tz_now().date())

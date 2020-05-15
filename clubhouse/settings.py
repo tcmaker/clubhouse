@@ -68,6 +68,7 @@ INSTALLED_APPS = [
 
     # Mine
     # 'signup.apps.SignupConfig',
+    'accounts.apps.AccountsConfig',
     'dashboard.apps.DashboardConfig',
     # 'kiosk.apps.KioskConfig',
     # 'approvals.apps.ApprovalsConfig',
@@ -111,7 +112,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'clubhouse.wsgi.application'
 
-AUTH_USER_MODEL='dashboard.User'
+AUTH_USER_MODEL='accounts.User'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -154,7 +155,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 LOGIN_REDIRECT_URL = '/'
 # LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
 LOGOUT_REDIRECT_URL = 'https://sso.tcmaker.org/logout?client_id=%s&logout_uri=https://tcmaker.org/' % os.environ['COGNITO_CLIENT_ID']
-LOGIN_URL='/dashboard/login/'
+LOGIN_URL='/accounts/login/'
 
 
 # Internationalization

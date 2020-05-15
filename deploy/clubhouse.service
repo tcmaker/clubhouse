@@ -1,0 +1,14 @@
+[Unit]
+Description=Clubhouse Django Application
+Documentation=https://github.com/tcmaker/clubhouse/
+After=network.target
+
+[Service]
+Type=simple
+User=django
+WorkingDirectory=/home/django/clubhouse
+ExecStart=/home/django/.local/bin/pipenv run gunicorn clubhouse.wsgi --forwarded-allow-ips="*" --bind=0.0.0.0:8000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

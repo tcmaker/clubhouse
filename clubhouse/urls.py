@@ -34,7 +34,8 @@ urlpatterns = [
     # path('kiosk/', include('kiosk.urls')),
     # path('approvals', include('approvals.urls')),
 
-    path('accounts/', include('django.contrib.auth.urls')),
+    # path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('accounts.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Generally, this should go last.

@@ -1,6 +1,6 @@
 from django.db import models, DataError
 from django.core.exceptions import ValidationError
-from dashboard.models import User
+from accounts.models import User
 from workshop.models import Area
 
 from django.utils.timezone import timedelta, localtime
