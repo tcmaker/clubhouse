@@ -145,11 +145,16 @@ OIDC_OP_TOKEN_ENDPOINT = os.environ['COGNITO_OIDC_TOKEN_ENDPOINT']
 OIDC_OP_USER_ENDPOINT = os.environ['COGNITO_OIDC_USER_ENDPOINT']
 OIDC_CREATE_USER = False
 OIDC_USE_NONCE=True
+OIDC_TOKEN_USE_BASIC_AUTH=True
+# OIDC_AUTHENTICATION_CALLBACK_URL='https://clubhouse.tcmaker.org/oidc/callback/'
 
 COGNITO_USER_POOL_ID=os.environ['COGNITO_USER_POOL_ID']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
+# LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
+LOGOUT_REDIRECT_URL = 'https://sso.tcmaker.org/logout?client_id=%s&logout_uri=https://tcmaker.org/' % os.environ['COGNITO_CLIENT_ID']
+LOGIN_URL='/dashboard/login/'
 
 
 # Internationalization
