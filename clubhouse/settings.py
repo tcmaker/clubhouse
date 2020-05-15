@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     # 'approvals.apps.ApprovalsConfig',
     # 'storage.apps.StorageConfig',
     # 'endorsements.apps.EndorsementsConfig',
+    'landing.apps.LandingConfig',
     'timeslots.apps.TimeslotsConfig',
     'workshop.apps.WorkshopConfig',
 ]
