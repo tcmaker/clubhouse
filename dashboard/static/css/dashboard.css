@@ -20,3 +20,7 @@ body {
     }
   }
 }
+
+.sidebar li a i.fas {
+  margin-right: 1ex;
+}

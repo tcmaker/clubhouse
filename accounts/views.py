@@ -43,11 +43,13 @@ def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.POST)
         if form.is_valid():
-            # TODO: Change cognito password
-            messages.success(request, 'Password Updated')
+            if request.user.change_cognito_password(form.cleaned_data['password']):
+                messages.success(request, 'Password Updated')
+            else:
+                messages.error(request, 'Due to a system error, your password could not be changed.')
             return redirect('/dashboard')
     else:
         form = PasswordChangeForm()
     return render(request, 'accounts/change_password.html', {
-        'form': form  
+        'form': form
     })

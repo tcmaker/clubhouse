@@ -24,16 +24,16 @@
 
     <h4>Your Upcoming Reservations</h4>
     <ul>
-    {% for reservation in request.user.reservation_set.all|dictsort:"timeslot.start_time" %}
-      <li><a href="/timeslots/reservations/{{ reservation.id }}">{{ reservation.timeslot.area.name }}: {{ reservation.timeslot.start_time }}</a></li>
+      {% for reservation in request.user.reservation_set.upcoming %}
+        <li><a href="/timeslots/reservations/{{ reservation.id }}">{{ reservation.timeslot.area.name }}: {{ reservation.timeslot.start_time }}</a></li>
 
-    {% empty %}
-      <div class="alert alert-secondary">
-        <em>You haven't reserved any timeslots yet. It's not too late to
-        <a href="/timeslots/">do something about that</a>!</em>
-      </div>
-    {% endfor %}
-  </div>
+      {% empty %}
+        <div class="alert alert-secondary">
+          <em>You haven't reserved any timeslots yet. It's not too late to
+          <a href="/timeslots/">do something about that</a>!</em>
+        </div>
+      {% endfor %}
+    </div>
   </ul>
   <div class="col-md-3 offset-md-1">
     <div class="card bg-info text-white mb-4">

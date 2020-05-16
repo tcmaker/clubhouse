@@ -26,7 +26,7 @@
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item"><strong>Manager:</strong> {{ area.area_manager.first_name }} {{ area.area_manager.last_name }}</li>
-      <li class="list-group-item"><strong>Contact Email:</strong> <code>SHOP_ALIAS@tcmaker.org</code></li>
+      <li class="list-group-item"><strong>Contact Email:</strong> <a href="mailto:{{ area.shop_contact_email }}"><code>{{ area.shop_contact_email }}</code></a></li>
       <li class="list-group-item"><strong>Capacity:</strong> {{ area.covid19_capacity }} members at once</li>
     </ul>
     <div class="card-body">

@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 # from . import rest_actions
 from django.utils.translation import ugettext_lazy as _
 import boto3, os
+from botocore.exceptions import ParamValidationError
 
 class User(AbstractUser):
     member_identifier = models.UUIDField(null=True, blank=True)
@@ -14,6 +16,7 @@ class User(AbstractUser):
     def __str__(self):
         return ' '.join([self.first_name, self.last_name])
 
+    @property
     def is_current_member(self):
         if not self.civicrm_membership_status:
             return False
@@ -24,9 +27,19 @@ class User(AbstractUser):
         return False
 
     #### Cognito ####
-    def change_cognito_password(self, new_password):
-        client = boto3.client('cognito-idp')
-        pass
+    def change_cognito_password(self, new_password, is_temporary=False):
+        client = boto3.client('cognito-idp', region_name=os.environ['AWS_DEFAULT_REGION'])
+        try:
+            response = client.admin_set_user_password(
+                UserPoolId=settings.COGNITO_USER_POOL_ID,
+                Username=self.username,
+                Password=new_password,
+                Permanent= not is_temporary
+            )
+            return response
+        except ParamValidationError as e:
+            raise ArgumentError('Password requirements not met')
+
 
     def create_cognito_record(self, email_verified=False):
         user_attributes =[
@@ -50,7 +63,6 @@ class User(AbstractUser):
             if attribute['Name'] == 'sub':
                 self.sub = attribute['Value']
                 self.save()
-
 
         return response
 

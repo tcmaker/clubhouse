@@ -12,11 +12,20 @@
 {% endblock %}
 
 {% block content %}
-  <ul class="list-group">
-    {% for reservation in reservations.all %}
-      <li>
-        <a href="/links/">
-      </li>
-    {% endfor %}
-  </ul>
+
+{% regroup reservations by timeslot.area.name as reservations_by_area %}
+{% for area in reservations_by_area %}
+  <h3>{{ area.grouper }}</h3>
+  {% regroup area.list by timeslot.start_time|date:'F Y' as reservations_by_month  %}
+  {% for month in reservations_by_month %}
+    <h5>{{ month.grouper }}</h5>
+    <ul>
+      {% for reservation in month.list %}
+        <li>
+          <a href="{% url 'timeslots:reservation_detail' reservation_id=reservation.id %}">{{ reservation.as_text_with_date }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% endfor %}
 {% endblock %}
