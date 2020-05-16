@@ -2,6 +2,7 @@ from django.db import models, DataError
 from django.core.exceptions import ValidationError
 from accounts.models import User
 from workshop.models import Area
+from django.utils.timezone import now as tz_now
 
 from django.utils.timezone import timedelta, localtime
 
@@ -60,9 +61,23 @@ class Timeslot(models.Model):
 
         return ret
 
+class ReservationManager(models.Manager):
+    def upcoming(self):
+        return self.get_queryset().order_by('timeslot__start_time').filter(timeslot__start_time__gte=tz_now())
+
 class Reservation(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     timeslot = models.ForeignKey('Timeslot', on_delete=models.CASCADE, blank=False, null=False)
+
+    objects = ReservationManager()
+
+    def as_text_with_date(self):
+        return self.timeslot.humanize(include_date=True)
+
+    def as_text_with_date_and_area(self):
+        return self.timeslot.humanize(include_date=True, include_area=False)
+
+
 
     def __timeslot_is_available(self):
         area_max_capacity = self.timeslot.area.covid19_capacity
@@ -77,9 +92,6 @@ class Reservation(models.Model):
         total = total.filter(timeslot__start_time__date=self.timeslot.start_time.date())
         total = total.filter(member_id=self.member.id).count()
         return total < 1
-
-
-        # import code; code.interact(local=dict(globals(), **locals()))
 
         return MEMBER_MAX_DAILY_TIMESLOTS > total
 

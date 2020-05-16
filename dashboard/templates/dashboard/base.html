@@ -8,14 +8,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="{% static "css/simplex-theme.css" %}">
   <link rel="stylesheet" href= "{% static "css/dashboard.css" %}">
 
   <!-- FullCalendar -->
+  <link rel="stylesheet" href="{% static "fontawesome/css/all.css" %}" />
   <link rel="stylesheet" href="{% static "fullcalendar/packages/core/main.css" %}" />
   <link rel="stylesheet" href="{% static "fullcalendar/packages/daygrid/main.css" %}"  />
   <link rel="stylesheet" href="{% static "fullcalendar/packages/timegrid/main.css" %}"  />
   <link rel="stylesheet" href="{% static "fullcalendar/packages/list/main.css" %}"  />
+  <link rel='stylesheet' href="{% static "fullcalendar/bootstrap/main.css" %}" />
 
   <title>{% block title %}Clubhouse{% endblock %} -- Twin Cities Maker</title>
 </head>
@@ -23,7 +26,7 @@
 <!-- Top Navigation -->
 <nav class='navbar navbar-dark fixed-top bg-dark navbar-expand-lg'>
   <div class="navbar-brand">
-    <a href="/"><img
+    <a href="{% url 'dashboard:index' %}"><img
       class="d-inline-block align-top"
       src="{% static "img/logo-white-text.svg" %}"
       alt="Twin Cities Maker logo"
@@ -38,7 +41,7 @@
       <li class="nav-item dropdown">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ request.user }}</a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="">Change Password</a>
+          <a class="dropdown-item" href="{% url 'accounts:change_password' %}">Change Password</a>
           <hr class="dropdown-divider">
           <a class="dropdown-item" href="{% url 'accounts:signout' %}">Logout</a>
         </div>
@@ -50,17 +53,25 @@
 <div class="container-fluid">
   <div class="row">
     <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-      <div class="sidebar-sticky">
-        <h6>Timeslots</h6>
+      <div class="sidebar-sticky pt-4">
+        <h6>Accounts</h6>
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="{% url 'timeslots:reservation_list' %}">Reservations</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'timeslots:index' %}">Timeslots</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'accounts:change_password' %}"><i class="fas fa-user-edit"></i> Change Password</a></li>
         </ul>
 
-        <h6>Administrative</h6>
+
+        <h6>Timeslots</h6>
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="/admin/">Admin Panel</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'timeslots:reservation_list' %}"><i class="fas fa-clock"></i>Reservations</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'timeslots:index' %}"><i class="fas fa-calendar-alt"></i> Timeslots</a></li>
         </ul>
+
+        {% if request.user.is_staff %}
+          <h6>Administrative</h6>
+          <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="/admin/"><i class="fas fa-tools"></i> Admin Panel</a></li>
+          </ul>
+        {% endif %}
       </div>
     </nav>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -69,7 +80,7 @@
           <h2 class="mb-2 mt-4">{% block heading %}Dashboard{% endblock %}</h2>
           {% block breadcrumbs %}
             {% clear_breadcrumbs %}
-            {% breadcrumb "Home" "/" %}
+            {% breadcrumb "Home" 'dashboard:index' %}
           {% endblock %}
           {% block breadcrumb_content %}
             {% render_breadcrumbs "django_bootstrap_breadcrumbs/bootstrap4.html" %}

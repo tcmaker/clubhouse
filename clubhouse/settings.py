@@ -46,6 +46,8 @@ ALLOWED_HOSTS = [
 
 WEBAPP_URL_BASE=__server_host_url
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -60,6 +62,7 @@ INSTALLED_APPS = [
 
     # Libraries
     'django_extensions',
+    'sslserver', # self-signed ssl dev server for testing with cognito
     'phonenumber_field',
     'localflavor',
     'crispy_forms',
@@ -76,6 +79,7 @@ INSTALLED_APPS = [
     # 'endorsements.apps.EndorsementsConfig',
     'landing.apps.LandingConfig',
     'timeslots.apps.TimeslotsConfig',
+    'renew.apps.RenewConfig',
     'workshop.apps.WorkshopConfig',
 ]
 
@@ -137,24 +141,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+COGNITO_USER_POOL_ID=os.environ['COGNITO_USER_POOL_ID']
+
 OIDC_RP_SIGN_ALGO = 'RS256'
 # OIDC_RP_IDP_SIGN_KEY = 'RS256'
-OIDC_OP_JWKS_ENDPOINT = os.environ['COGNITO_OIDC_JWKS_ENDPOINT']
 OIDC_RP_CLIENT_ID = os.environ['COGNITO_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['COGNITO_CLIENT_SECRET']
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['COGNITO_OIDC_AUTHORIZATION_ENDPOINT']
 OIDC_OP_TOKEN_ENDPOINT = os.environ['COGNITO_OIDC_TOKEN_ENDPOINT']
 OIDC_OP_USER_ENDPOINT = os.environ['COGNITO_OIDC_USER_ENDPOINT']
+OIDC_OP_JWKS_ENDPOINT = "https://cognito-idp.us-east-1.amazonaws.com/%s/.well-known/jwks.json" % COGNITO_USER_POOL_ID
+
 OIDC_CREATE_USER = False
 OIDC_USE_NONCE=True
 OIDC_TOKEN_USE_BASIC_AUTH=True
-# OIDC_AUTHENTICATION_CALLBACK_URL='https://clubhouse.tcmaker.org/oidc/callback/'
-
-COGNITO_USER_POOL_ID=os.environ['COGNITO_USER_POOL_ID']
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = 'https://tcmaker.org/'
 LOGOUT_REDIRECT_URL = 'https://sso.tcmaker.org/logout?client_id=%s&logout_uri=https://tcmaker.org/' % os.environ['COGNITO_CLIENT_ID']
 LOGIN_URL='/accounts/login/'
 

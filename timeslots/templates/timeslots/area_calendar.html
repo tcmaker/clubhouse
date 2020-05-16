@@ -21,7 +21,7 @@
 </p>
 
 <p>
-  <strong>Remember:</strong>You can only book <em>one timeslot per day,</em>
+  <strong>Remember:</strong> You can only book <em>one timeslot per day,</em>
   but there is no limit to how many days you can come in.
 </p>
 
@@ -68,7 +68,8 @@
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         navLinks: true,
-        plugins: [ 'dayGrid', 'interaction', 'bootstrap', 'timeGrid', 'list'],
+        plugins: [ 'bootstrap', 'dayGrid', 'interaction', 'bootstrap', 'timeGrid', 'list'],
+        themeSystem: 'bootstrap',
         header: {
           left: 'prev,next today',
           center: 'title',

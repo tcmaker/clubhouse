@@ -5,7 +5,7 @@
 
 {% block breadcrumbs %}
   {{ block.super }}
-  {% breadcrumb 'Timeslots' 'timeslots:index' %}
+  {% breadcrumb 'Accounts' 'accounts:index' %}
 {% endblock %}
 
 {% block heading %}
@@ -15,23 +15,19 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-6 offset-md-3">
-
-  <div class="card">
-  <div class="card-body">
-    <h5 class="card-title bg-info text-white">Coming Soon</h5>
-    <p>
-    	Before long, you'll be able to update your name,
-	contact information, and communication preferences
-	here. Until that day comes, however, all you can
-	do here is change your password.
-    </p>
-  </div>
-</div>
-
-    <a href="btn btn-primary" href="{% url 'accounts:change_password' %}">Wow, let's do that!</a>
+  <div class="col-md-6 offset-md-3">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Coming Soon</h5>
+          <p>Before long, you'll be able to update your name,
+	           contact information, and communication preferences
+	            here. Until that day comes, however, all you can
+	             do here is change your password.
+          </p>
+      </div>
+    </div>
+    <a class="btn btn-primary" href="{% url 'accounts:change_password' %}">Wow, let's do that!</a>
 </div>
 </div>
 
 {% endblock %}
-

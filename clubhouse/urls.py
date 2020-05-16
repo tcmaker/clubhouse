@@ -28,7 +28,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('timeslots/', include('timeslots.urls')),
-    path('accounts/', include('accounts.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Generally, this should go last.
