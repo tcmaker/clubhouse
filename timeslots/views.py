@@ -9,42 +9,45 @@ from .forms import ReservationForm, CancelReservationForm
 from .models import Reservation
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-
 from django.utils.timezone import now as tz_now
+
+from django.contrib.auth.decorators import login_required
+from accounts.auth.decorators import membership_required
 
 import json
 
+@membership_required
+@login_required
 def area_list(request):
     context = {
         'areas': Area.objects.all()
     }
     return render(request, 'timeslots/index.html', context)
 
-def area_detail(request, area_id):
-    today = date.today()
-    months = ["2020-%02d" % m for m in range(today.month, 13)]
-
-    return render(request, 'timeslots/area_detail.html', {
-        'area': Area.objects.get(pk=area_id),
-        'months': months
-    })
-
+@membership_required
+@login_required
 def area_calendar(request, area_id):
     return render(request, 'timeslots/area_calendar.html', {
         'area': Area.objects.get(pk=area_id),
     })
 
-def area_calendar_date(request, area_id, date_string):
-    return render(request, 'timeslots/area_calendar_date.html', {
-        'area': Area.objects.get(pk=area_id),
-    })
+# @membership_required
+# @login_required
+# def area_calendar_date(request, area_id, date_string):
+#     return render(request, 'timeslots/area_calendar_date.html', {
+#         'area': Area.objects.get(pk=area_id),
+#     })
 
+@membership_required
+@login_required
 def events_as_json(request, area_id):
     start = parse_datetime(request.GET['start'])
     end = parse_datetime(request.GET['end'])
     area = Area.objects.get(pk=area_id)
     return HttpResponse(json.dumps(get_timeslots_for_range(area, start, end)), content_type = 'application/json')
 
+@membership_required
+@login_required
 def timeslot_detail(request, area_id, slug):
     area = Area.objects.get(pk=area_id)
 
@@ -53,8 +56,9 @@ def timeslot_detail(request, area_id, slug):
         'timeslot': get_or_create_timeslot(slug),
     })
 
+@membership_required
+@login_required
 def reservation_form(request, area_id, slug):
-
     area = Area.objects.get(pk=area_id)
     timeslot = get_or_create_timeslot(slug)
     if request.method == 'POST':
@@ -83,11 +87,15 @@ def reservation_form(request, area_id, slug):
         'form': form,
     })
 
+@membership_required
+@login_required
 def reservation_list(request):
     return render(request, 'timeslots/reservation_list.html', {
         'reservations': request.user.reservation_set.order_by('timeslot__start_time')
     })
 
+@membership_required
+@login_required
 def reservation_detail(request, reservation_id):
     reservation = request.user.reservation_set.get(pk=reservation_id)
 
@@ -95,6 +103,8 @@ def reservation_detail(request, reservation_id):
         'reservation': reservation
     })
 
+@membership_required
+@login_required
 def reservation_cancel(request, reservation_id):
     reservation = request.user.reservation_set.get(pk=reservation_id)
 
