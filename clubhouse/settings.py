@@ -156,7 +156,7 @@ OIDC_CREATE_USER = False
 OIDC_USE_NONCE=True
 OIDC_TOKEN_USE_BASIC_AUTH=True
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = 'https://sso.tcmaker.org/logout?client_id=%s&logout_uri=https://tcmaker.org/' % os.environ['COGNITO_CLIENT_ID']
 LOGIN_URL='/accounts/login/'
 
@@ -218,3 +218,12 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+#### SQS for Timeslots ####
+TIMESLOT_QUEUE_URL=os.environ['TIMESLOT_QUEUE_URL']
+
+#### CiviCRM ####
+CIVICRM_URL_BASE= os.environ['CIVICRM_URL_BASE']
+CIVICRM_API_KEY= os.environ['CIVICRM_API_KEY']
+CIVICRM_SITE_KEY= os.environ['CIVICRM_SITE_KEY']
+CIVICRM_API_URL_BASE= os.environ['CIVICRM_API_URL_BASE']

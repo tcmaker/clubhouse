@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('landing.urls')),
     path('accounts/', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('renew/', include('renew.urls')),
     path('timeslots/', include('timeslots.urls')),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
 
