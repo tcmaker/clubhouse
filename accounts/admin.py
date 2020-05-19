@@ -16,7 +16,7 @@ class UserAdmin(admin.ModelAdmin):
         }),
 
         ('Integrations', {
-            'fields': ('civicrm_identifier', 'member_identifier')
+            'fields': ('civicrm_identifier', 'civicrm_keyfob_code'),
         }),
 
         ('Advanced', {

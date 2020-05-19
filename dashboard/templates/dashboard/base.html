@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="{% static "fullcalendar/packages/daygrid/main.css" %}"  />
   <link rel="stylesheet" href="{% static "fullcalendar/packages/timegrid/main.css" %}"  />
   <link rel="stylesheet" href="{% static "fullcalendar/packages/list/main.css" %}"  />
-  <link rel='stylesheet' href="{% static "fullcalendar/bootstrap/main.css" %}" />
+  <link rel='stylesheet' href="{% static "fullcalendar/packages/bootstrap/main.min.css" %}" />
 
   <title>{% block title %}Clubhouse{% endblock %} -- Twin Cities Maker</title>
 </head>
@@ -58,6 +58,10 @@
         <ul class="nav flex-column">
           <li class="nav-item"><a class="nav-link" href="{% url 'accounts:change_password' %}"><i class="fas fa-user-edit"></i> Change Password</a></li>
         </ul>
+
+	<h6>Membership and Dues</h6>
+	<ul class="nav flex-column">
+	  <li class="nav-item"><a class="nav-link" href="{% url 'renew:index' %}"><i class="fas fa-credit-card"></i> Membership Renewal</a></li>
 
 
         <h6>Timeslots</h6>

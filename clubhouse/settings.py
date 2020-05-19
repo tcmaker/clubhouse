@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=True
+DEBUG=False
 if 'ENVIRONMENT' in os.environ and os.environ['ENVIRONMENT'] != 'development':
     DEBUG = False
 
@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_bootstrap_breadcrumbs',
     'mozilla_django_oidc',
+    # 'pipeline',
 
     # Mine
     # 'signup.apps.SignupConfig',
@@ -85,13 +86,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'mozilla_django_oidc.middleware.SessionRefresh',
 ]
 
@@ -177,7 +178,13 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # 'pipeline.finders.PipelineFinder',
 ]
+STATIC_ROOT='/home/django/clubhouse/staticfiles'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'dashboard.storage.ManifestStaticFilesStorage'
+
 
 # Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -189,12 +196,14 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 
 SERVER_EMAIL='stephen.vandahm@tcmaker.org'
-MANAGERS = os.environ['MANAGER_EMAILS'].split(',')
+#MANAGERS = os.environ['MANAGER_EMAILS'].split(',')
 # get rid of trailing '' if there's only one manager
-if len(MANAGERS) > 1 and MANAGERS[-1] == '':
-    MANAGERS.pop()
-
-ADMINS = MANAGERS
+#if len(MANAGERS) > 1 and MANAGERS[-1] == '':
+#    MANAGERS.pop()
+#
+#ADMINS = MANAGERS
+ADMINS = [('stephen.vandahm@tcmaker.org', 'stephen.vandahm@tcmaker.org')]
+MANAGERS = ADMINS
 
 #### Heroku ####
 import django_heroku
@@ -227,3 +236,8 @@ CIVICRM_URL_BASE= os.environ['CIVICRM_URL_BASE']
 CIVICRM_API_KEY= os.environ['CIVICRM_API_KEY']
 CIVICRM_SITE_KEY= os.environ['CIVICRM_SITE_KEY']
 CIVICRM_API_URL_BASE= os.environ['CIVICRM_API_URL_BASE']
+
+#### File storage ####
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_STORAGE_BUCKET_NAME='tcmaker-clubhouse-uploads-prod'
+
