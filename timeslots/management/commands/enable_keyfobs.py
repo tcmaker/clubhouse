@@ -35,6 +35,6 @@ class Command(BaseCommand):
 
         for timeslot in timeslots:
             for reservation in timeslot.reservation_set.all():
-                message = self.__make_json_message('12345', reservation.member.email)
+                message = self.__make_json_message(reservation.member.civicrm_keyfob_code, reservation.member.email)
                 self.__enqueue(message)
                 print(message)

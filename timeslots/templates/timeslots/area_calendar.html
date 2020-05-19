@@ -68,13 +68,21 @@
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         navLinks: true,
-        plugins: [ 'bootstrap', 'dayGrid', 'interaction', 'bootstrap', 'timeGrid', 'list'],
+        plugins: [ 'bootstrap', 'interaction', 'bootstrap', 'timeGrid', 'list'],
         themeSystem: 'bootstrap',
         header: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+          right: 'timeGridWeek,timeGridDay,listMonth'
         },
+	defaultView: 'timeGridWeek',
+	// disregard events in the past
+	/*validRange: function(nowDate) {
+    	  return {
+            start: nowDate,
+            end: nowDate.clone().add(2, 'months')
+          };
+        },*/
 
         // Load from server
         events: {
