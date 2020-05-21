@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 import boto3, os
 from botocore.exceptions import ParamValidationError
 
+from .civicrm import get_member_info, get_membership_status
+
 class User(AbstractUser):
     member_identifier = models.UUIDField(null=True, blank=True)
     civicrm_identifier = models.PositiveIntegerField('identifier in civicrm', null=True, blank=True)
@@ -66,35 +68,20 @@ class User(AbstractUser):
 
         return response
 
-    # def get_member_record(self):
-    #     if not self.member_identifier:
-    #         return None
-    #     return rest_actions.get_member_by_uuid(self.member_identifier)
-    #
-    # def get_household(self):
-    #     url = self.get_member_record()['household']
-    #     if url:
-    #         return rest_actions.get_resource(url)
-    #     return None
-    #
-    #
-    # def get_student_team(self):
-    #     url = self.get_member_record()['student_team']
-    #     if url:
-    #         return rest_actions.get_resource(url)
-    #     return None
-    #
-    # def has_active_membership(self):
-    #     member_record = self.get_member_record()
-    #     if not member_record:
-    #         return False
-    #
-    #     household = self.get_household()
-    #     if household and household['status'] == 'active':
-    #         return True
-    #
-    #     student_team = self.get_student_team()
-    #     if student_team and student_team['status'] == 'active':
-    #         return True
-    #
-    #     return False
+    def sync_membership_status(self):
+        if not self.civicrm_identifier: return
+        self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
+        self.save()
+
+    def sync_membership_info(self):
+        if not self.civicrm_identifier:
+            return
+
+        info = get_member_info(self.civicrm_identifier)
+        self.first_name=info['first_name']
+        self.last_name=info['last_name']
+        self.email=info['email']
+        if 'keyfob' in info:
+            self.civicrm_keyfob_code = info['keyfob']
+        self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
+        self.save()
