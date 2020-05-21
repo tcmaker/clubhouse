@@ -75,8 +75,10 @@ class Reservation(models.Model):
         return self.timeslot.humanize(include_date=True)
 
     def as_text_with_date_and_area(self):
-        return self.timeslot.humanize(include_date=True, include_area=False)
+        return self.timeslot.humanize(include_date=True, include_area=True)
 
+    def __str__(self):
+        return str(self.member) + ": " + self.as_text_with_date_and_area()
 
 
     def __timeslot_is_available(self):

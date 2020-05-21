@@ -31,7 +31,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         message = self.__make_json_message('enable')
-        # self.__enqueue(message)
+        self.__enqueue(message)
+        print(message)
         message = self.__make_json_message('disable')
         self.__enqueue(message)
         print(message)

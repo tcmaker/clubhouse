@@ -20,7 +20,7 @@ import json
 @login_required
 def area_list(request):
     context = {
-        'areas': Area.objects.all()
+        'areas': Area.objects.order_by('name').all(),
     }
     return render(request, 'timeslots/index.html', context)
 

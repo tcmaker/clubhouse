@@ -91,6 +91,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'accounts.auth.MembershipStatusMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
@@ -154,7 +155,7 @@ OIDC_OP_USER_ENDPOINT = os.environ['COGNITO_OIDC_USER_ENDPOINT']
 OIDC_OP_JWKS_ENDPOINT = "https://cognito-idp.us-east-1.amazonaws.com/%s/.well-known/jwks.json" % COGNITO_USER_POOL_ID
 
 OIDC_CREATE_USER = False
-OIDC_USE_NONCE=True
+OIDC_USE_NONCE=False # We should use this, but turning it off eliminates bizarre login errors
 OIDC_TOKEN_USE_BASIC_AUTH=True
 
 LOGIN_REDIRECT_URL = '/dashboard/'
