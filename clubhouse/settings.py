@@ -33,8 +33,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=False
-if 'ENVIRONMENT' in os.environ and os.environ['ENVIRONMENT'] != 'development':
-    DEBUG = False
+if 'ENVIRONMENT' in os.environ and os.environ['ENVIRONMENT'] == 'development':
+    DEBUG = True
 
 __server_host_url = os.environ['SERVER_PROTOCOL'] + '://' + os.environ['SERVER_HOSTNAME']
 if 'SERVER_PORT' in os.environ:
@@ -91,6 +91,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'accounts.auth.MembershipStatusMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'mozilla_django_oidc.middleware.SessionRefresh',
@@ -154,7 +155,7 @@ OIDC_OP_USER_ENDPOINT = os.environ['COGNITO_OIDC_USER_ENDPOINT']
 OIDC_OP_JWKS_ENDPOINT = "https://cognito-idp.us-east-1.amazonaws.com/%s/.well-known/jwks.json" % COGNITO_USER_POOL_ID
 
 OIDC_CREATE_USER = False
-OIDC_USE_NONCE=True
+OIDC_USE_NONCE=False # We should use this, but turning it off eliminates bizarre login errors
 OIDC_TOKEN_USE_BASIC_AUTH=True
 
 LOGIN_REDIRECT_URL = '/dashboard/'
@@ -185,15 +186,8 @@ STATIC_ROOT='/home/django/clubhouse/staticfiles'
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # STATICFILES_STORAGE = 'dashboard.storage.ManifestStaticFilesStorage'
 
-
-# Email Backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ['EMAIL_HOST']
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+DEFAULT_FROM_EMAIL = 'membership@tcmaker.org'
+EMAIL_BACKEND='django_ses.SESBackend'
 
 SERVER_EMAIL='stephen.vandahm@tcmaker.org'
 #MANAGERS = os.environ['MANAGER_EMAILS'].split(',')
@@ -240,4 +234,3 @@ CIVICRM_API_URL_BASE= os.environ['CIVICRM_API_URL_BASE']
 #### File storage ####
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_STORAGE_BUCKET_NAME='tcmaker-clubhouse-uploads-prod'
-

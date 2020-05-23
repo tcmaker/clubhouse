@@ -25,6 +25,7 @@ mozilla-django-oidc = {git = "https://github.com/vandahm/mozilla-django-oidc.git
 django-sslserver = "*"
 django-storages = "*"
 django-pipeline = "*"
+django-ses = "*"
 
 [requires]
 python_version = "3.6.9"

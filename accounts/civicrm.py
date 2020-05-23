@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from django.conf import settings
-from .models import User
+# from accounts.models import User
+class User:
+    pass
 
 import os, re
 import requests
@@ -29,14 +31,14 @@ def civicrm_query(*, entity, method, action, options):
 
 def current_member_ids():
     offset = 0
-    response = civicrm_query(entity='Membership', method='GET', action='get', options={'offset': offset, 'active_only': 'Yes'})
+    response = civicrm_query(entity='Membership', method='GET', action='get', options={'offset': offset, 'active_only': 1})
     count = int(response['count'])
     while count > 0:
         for index, membership in response['values'].items():
             print(membership)
             yield membership['contact_id']
         offset += count
-        response = civicrm_query(entity='Membership', method='GET', action='get', options={'offset': offset, 'active_only': 'Yes'})
+        response = civicrm_query(entity='Membership', method='GET', action='get', options={'offset': offset, 'active_only': 1})
         count = int(response['count'])
 
 
@@ -51,8 +53,6 @@ def _make_username(first_name, last_name):
         candidate = candidate + str(dedup)
         dedup += 1
     return candidate
-        
-        
 
 def import_active_members():
     for contact_id in current_member_ids():
@@ -103,8 +103,6 @@ def get_member_info(identifier):
 
     return contact
 
-    
-    
 def civicrm_get(*, entity, entity_id, options={}):
     r = civicrm_query(entity=entity, method='GET', action='get', options={'id': entity_id})
     if len(r['values']) == 0:
@@ -127,3 +125,50 @@ def renewal_url(user):
         'cs=%s' % create_checksum(user),
         'cid=%s' % user.civicrm_identifier
     ]))
+
+def import_member_by_contact_id(contact_id):
+    if User.objects.filter(civicrm_identifier=int(contact_id)).exists():
+        raise ValueError('Member already exists in our database')
+
+    # Continue with import
+    info = get_member_info(contact_id)
+
+    u = User(
+        first_name=info['first_name'],
+        last_name=info['last_name'],
+        email=info['email'],
+        username=_make_username(info['first_name'], info['last_name']),
+        civicrm_identifier=str(contact_id),
+        # civicrm_membership_status = 'Current',
+    )
+    if info['keyfob']:
+        u.civicrm_keyfob_code = info['keyfob']
+
+    u.save()
+    return u
+
+def get_membership_status(contact_id):
+    resp = civicrm_query(
+        entity='Membership',
+        method='GET',
+        action='get',
+        options={
+            'contact_id': contact_id,
+            'sort': 'id DESC',
+            'rowCount': 1,
+        }
+    )
+    if resp['count'] == 0:
+        return None
+
+    key = next(iter(resp['values']))
+
+    status_id = int(resp['values'][key]['status_id'])
+    if status_id == 1: return 'New'
+    if status_id == 2: return 'Current'
+    if status_id == 3: return 'Grace'
+    if status_id == 4: return 'Expired'
+    if status_id == 5: return 'Pending'
+
+    # It's none of the ones we care about
+    return None
