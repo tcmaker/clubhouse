@@ -26,6 +26,3 @@ django-sslserver = "*"
 django-storages = "*"
 django-pipeline = "*"
 django-ses = "*"
-
-[requires]
-python_version = "3.6.9"
