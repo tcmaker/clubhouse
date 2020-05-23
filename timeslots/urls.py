@@ -15,8 +15,8 @@ urlpatterns = [
     path('<area_id>/', views.area_calendar, name='area_calendar'),
     path('<area_id>/events', views.events_as_json, name='events_as_json'),
     path('<area_id>/<slug>/', views.timeslot_detail, name="timeslot_detail"),
+    path('<area_id>/<slug>/status', views.close_timeslot, name="timeslot_close"),
     path('<area_id>/<slug>/reserve', views.reservation_form, name="reservation_form"),
-
 
     # path('reservations/', views.reservation_form, name="reservation_delete"),
 
