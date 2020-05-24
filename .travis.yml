@@ -12,6 +12,9 @@ install:
 env:
   - ENVIRONMENT=test
   - DATABASE_URL=postgres://postgres@localhost:5432/django-clubhouse-test
+  - SERVER_HOSTNAME=localhost
+  - SERVER_PORT=8000
+  - SERVER_PROTOCOL=https
 
 script:
   - pipenv run ./manage.py test
