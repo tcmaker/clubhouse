@@ -7,6 +7,7 @@ class Area(models.Model):
     covid19_capacity = models.PositiveIntegerField('Maximum Concurrent Users')
     area_manager = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     shop_contact_email = models.EmailField(max_length=50, null=True, blank=True)
+    is_exempt_from_member_timeslot_quota = models.BooleanField("Reservations in this area do not count against a member's daily quota.", null=False, default=False)
 
     def __str__(self):
         return self.name

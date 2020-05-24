@@ -116,8 +116,6 @@ class Reservation(models.Model):
     def as_text_with_date_and_area(self):
         return self.timeslot.humanize(include_date=True, include_area=False)
 
-
-
     def __timeslot_is_available(self):
         area_max_capacity = self.timeslot.area.covid19_capacity
         reserved_capacity = self.timeslot.reservation_set.count()
@@ -125,10 +123,14 @@ class Reservation(models.Model):
         return area_max_capacity > reserved_capacity
 
     def __member_has_open_reservations(self):
-        # start_of_day = localtime(self.timeslot.start_time).replace(hour=0, minute=0, second=0, microsecond=0)
-        # end_of_day = localtime(self.timeslot.end_time).replace(hour=23, minute=59, second=59, microsecond=999)
+        if self.timeslot.area.is_exempt_from_member_timeslot_quota:
+            return True
+
         total = Reservation.objects
-        total = total.filter(timeslot__start_time__date=self.timeslot.start_time.date())
+        total = total.filter(
+            timeslot__start_time__date=self.timeslot.start_time.date(),
+            timeslot__area__is_exempt_from_member_timeslot_quota=False
+        )
         total = total.filter(member_id=self.member.id).count()
         return total < 1
 
