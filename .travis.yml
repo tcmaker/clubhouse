@@ -6,7 +6,7 @@ services:
   - postgresql
 
 install:
-  - cp .env-travis .env
+  - cp .travis-env .env
   - pip install pipenv
   - pipenv install
 
