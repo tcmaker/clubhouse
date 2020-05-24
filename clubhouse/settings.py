@@ -207,6 +207,12 @@ django_heroku.settings(locals())
 if os.environ['SERVER_HOSTNAME'] == 'localhost':
     del DATABASES['default']['OPTIONS']['sslmode']
 
+# Test Database
+DATABASES['default']['TEST'] = {
+    'NAME': 'django-clubhouse-test'
+}
+
+
 
 LOGGING = {
     'version': 1,
