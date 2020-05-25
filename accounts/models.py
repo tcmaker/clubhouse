@@ -23,7 +23,7 @@ class User(AbstractUser):
         if not self.civicrm_membership_status:
             return False
 
-        if self.civicrm_membership_status in ['Current', 'Grace']:
+        if self.civicrm_membership_status in ['Current', 'Grace', 'New']:
             return True
 
         return False
