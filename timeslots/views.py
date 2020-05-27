@@ -16,23 +16,23 @@ from accounts.auth.decorators import membership_required
 
 import json
 
-@membership_required
 @login_required
+@membership_required
 def area_list(request):
     context = {
         'areas': Area.objects.order_by('name').all(),
     }
     return render(request, 'timeslots/index.html', context)
 
-@membership_required
 @login_required
+@membership_required
 def area_calendar(request, area_id):
     return render(request, 'timeslots/area_calendar.html', {
         'area': Area.objects.get(pk=area_id),
     })
 
-@membership_required
 @login_required
+@membership_required
 def close_timeslot(request, area_id, slug):
     area = Area.objects.get(pk=area_id)
     timeslot = get_or_create_timeslot(slug)
@@ -62,16 +62,16 @@ def close_timeslot(request, area_id, slug):
     })
 
 
-@membership_required
 @login_required
+@membership_required
 def events_as_json(request, area_id):
     start = parse_datetime(request.GET['start'])
     end = parse_datetime(request.GET['end'])
     area = Area.objects.get(pk=area_id)
     return HttpResponse(json.dumps(get_timeslots_for_range(area, start, end)), content_type = 'application/json')
 
-@membership_required
 @login_required
+@membership_required
 def timeslot_detail(request, area_id, slug):
     area = Area.objects.get(pk=area_id)
     timeslot = get_or_create_timeslot(slug)
@@ -86,8 +86,8 @@ def timeslot_detail(request, area_id, slug):
         'show_manager_options': request.user.id == area.area_manager.id
     })
 
-@membership_required
 @login_required
+@membership_required
 def reservation_form(request, area_id, slug):
     area = Area.objects.get(pk=area_id)
     timeslot = get_or_create_timeslot(slug)
@@ -117,15 +117,15 @@ def reservation_form(request, area_id, slug):
         'form': form,
     })
 
-@membership_required
 @login_required
+@membership_required
 def reservation_list(request):
     return render(request, 'timeslots/reservation_list.html', {
         'reservations': request.user.reservation_set.order_by('timeslot__start_time')
     })
 
-@membership_required
 @login_required
+@membership_required
 def reservation_detail(request, reservation_id):
     reservation = request.user.reservation_set.get(pk=reservation_id)
 
@@ -133,8 +133,8 @@ def reservation_detail(request, reservation_id):
         'reservation': reservation
     })
 
-@membership_required
 @login_required
+@membership_required
 def reservation_cancel(request, reservation_id):
     reservation = request.user.reservation_set.get(pk=reservation_id)
 
