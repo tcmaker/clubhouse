@@ -76,7 +76,7 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     # 'kiosk.apps.KioskConfig',
     # 'approvals.apps.ApprovalsConfig',
-    # 'storage.apps.StorageConfig',
+    'storage.apps.StorageConfig',
     # 'endorsements.apps.EndorsementsConfig',
     'landing.apps.LandingConfig',
     'timeslots.apps.TimeslotsConfig',
