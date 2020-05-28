@@ -3,6 +3,6 @@ from . import views
 
 app_name = 'storage'
 
-urlpatterns = [
-    path('', views.index, name='index'),
-]
+# urlpatterns = [
+#     path('', views.index, name='index'),
+# ]

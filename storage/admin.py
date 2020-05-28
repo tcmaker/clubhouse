@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Cubby, GreenTag, RedTag
+from .models import Cubby, CubbyRequest
 
 admin.site.register(Cubby)
-admin.site.register(GreenTag)
-admin.site.register(RedTag)
+admin.site.register(CubbyRequest)
