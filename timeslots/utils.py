@@ -31,9 +31,6 @@ def get_timeslots_for_range(area, start_time, end_time):
 
     # Make dummy records for empty timeslots
     start_hour = start_time.hour
-    # if start_hour % 3 == 1:
-    #     start_hour -=
-    # if start_hour %3 == 2:
     start_hour -= start_hour % 3
 
     time_counter = start_time.replace(second=0, microsecond=0, minute=0, hour=start_hour)
