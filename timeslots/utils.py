@@ -13,13 +13,29 @@ def datetimes_are_equal(left, right):
         return True
     return False
 
+
+def activate_riot_mode(start_time, end_time):
+    for area in Area.objects.all():
+        json = get_timeslots_for_range(area, start_time, end_time)
+        for json_object in json:
+            timeslot = get_or_create_timeslot(json_object['id'])
+            print(timeslot.humanize(include_date=True, include_area=True))
+            timeslot.is_closed_by_staff = True
+            timeslot.save()
+            timeslot.cancel_reservations(True)
+
+
+
 def get_timeslots_for_range(area, start_time, end_time):
     models = deque(area.timeslot_set.filter(start_time__gte=start_time, end_time__lte=end_time).order_by('start_time').all())
 
     # Make dummy records for empty timeslots
     start_hour = start_time.hour
-    if start_hour % 2 == 1:
-        start_hour -= 1
+    # if start_hour % 3 == 1:
+    #     start_hour -=
+    # if start_hour %3 == 2:
+    start_hour -= start_hour % 3
+
     time_counter = start_time.replace(second=0, microsecond=0, minute=0, hour=start_hour)
 
     timeslots = []
@@ -31,7 +47,6 @@ def get_timeslots_for_range(area, start_time, end_time):
 
         timeslot_end_time = time_counter + timedelta(hours=LENGTH_OF_TIMESLOT)
 
-        print(timeslot_end_time)
         # Does the timeslot already exist?
         # if len(models) > 0 and models[0].start_time == time_counter:
         if len(models) > 0 and datetimes_are_equal(models[0].start_time, time_counter):
