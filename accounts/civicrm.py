@@ -111,8 +111,7 @@ def civicrm_get(*, entity, entity_id, options={}):
 
 def create_checksum(user):
     r = civicrm_query(entity='Checksum', method='POST', action='create', options={'contact_id':user.civicrm_identifier})
-    r.raise_for_status()
-    return r.json()['values']['checksum']
+    return r['values']['checksum']
 
 def expand_url(uri):
     return settings.CIVICRM_URL_BASE + uri

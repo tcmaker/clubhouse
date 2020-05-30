@@ -6,6 +6,11 @@ from .models import User
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'last_name', 'first_name', 'email', 'username')
+
+    search_fields = ['last_name', 'first_name', 'email', 'username']
+
+    ordering = ['last_name', 'first_name']
+
     fieldsets = (
         ('Basic Information', {
             'fields': ('last_name', 'first_name', 'email'),
