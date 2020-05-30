@@ -41,19 +41,6 @@ def current_member_ids():
         response = civicrm_query(entity='Membership', method='GET', action='get', options={'offset': offset, 'active_only': 1})
         count = int(response['count'])
 
-
-def _sterilize(s):
-    return re.sub(r'[^A-Za-z]', '', s).lower()
-
-def _make_username(first_name, last_name):
-    dedup = 2
-    base = '.'.join([_sterilize(first_name), _sterilize(last_name)])
-    candidate = base
-    while User.objects.filter(username=candidate).exists():
-        candidate = candidate + str(dedup)
-        dedup += 1
-    return candidate
-
 def import_active_members():
     for contact_id in current_member_ids():
         if contact_id in ['1485']:

@@ -1,0 +1,12 @@
+{% extends 'admin/change_form.html' %}
+{% load admin_modify %}
+
+{% block content %}
+  {% if add %}
+    <p>Don't add user records manually, {{ request.user.first_name}}.</p>
+  {% else %}
+    {{ block.super }}
+  {% endif %}
+{% endblock %}
+
+{% block submit_buttons_bottom %}{% with show_save_and_add_another=False %}{% submit_row %}{% endwith %}{% endblock %}

@@ -2,9 +2,13 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.http import Http404, HttpResponse
+from .civicrm import get_member_info
+from .models import User
+import json
 #from . import rest_actions
 
-from .forms import PasswordChangeForm
+from .forms import PasswordChangeForm, CiviCRMContactImportForm
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -53,3 +57,65 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
+
+@login_required
+def import_civicrm_user(request):
+    if request.method == 'POST':
+        form = CiviCRMImportForm(request.POST)
+        if form.is_valid():
+            try:
+                u = import_member_by_contact_id(contact_id)
+                u.sync_membership_status()
+
+                if form.cleaned_data['create_sso_account_and_invite']:
+                    u.create_cognito_record(True) # If the data is already in CiviCRM, we assume the email has been verified.
+
+                return redirect('/admin/accounts/user/' + str(u.id))
+            except Exception as e:
+                messages.error(request, e)
+                return redirect('/admin/accounts/user/') # TODO Figure out URL name for this path
+
+
+#### Admin Views ####
+@login_required
+@permission_required('accounts.add_user')
+def import_civicrm_contact(request):
+    if request.method == 'POST':
+        form = CiviCRMContactImportForm(request.POST)
+        if form.is_valid():
+            try:
+                u = User.objects.import_member_by_contact_id(form.cleaned_data['contact_id'])
+                u.sync_membership_info()
+                u.sync_membership_status()
+
+                if form.cleaned_data['create_sso_account_and_invite']:
+                    u.create_cognito_record(True) # If the data is already in CiviCRM, we assume the email has been verified.
+
+                return redirect('/admin/accounts/user/' + str(u.id))
+            except Exception as e:
+                messages.error(request, e)
+                return redirect('/admin/accounts/user/') # TODO Figure out URL name for this path
+        else:
+            print(form.__dict__)
+    else:
+        form = CiviCRMContactImportForm()
+
+    return render(request, 'admin/accounts/user/import_form.html', {
+        'form': form,
+    })
+
+@login_required
+@permission_required('accounts.add_user')
+def import_civicrm_contact_preview(request):
+    payload = {}
+    contact_id = request.GET.get('contact_id', False)
+    if contact_id:
+        try:
+            resp = get_member_info(contact_id)
+            for key in ['contact_id', 'contact_type', 'first_name', 'last_name', 'email']:
+                payload[key] = resp[key]
+        except:
+            raise Http404
+
+    payload = json.dumps(payload)
+    return HttpResponse(payload, content_type = 'application/json')
