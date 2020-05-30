@@ -58,6 +58,9 @@ class Timeslot(models.Model):
                 )
             reservation.delete()
 
+    def reservation_count(self):
+        return self.reservation_set.count()
+
     def has_capacity(self):
         if self.is_closed_by_staff: return False
         return self.area.covid19_capacity > self.reservation_set.count()

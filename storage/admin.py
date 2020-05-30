@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cubby, CubbyRequest
+from .models import Cubby # , CubbyRequest
 
 @admin.register(Cubby)
 class CubbyAdmin(admin.ModelAdmin):
@@ -19,4 +19,4 @@ class CubbyAdmin(admin.ModelAdmin):
         ).order_by('int_identifier')
 
 
-admin.site.register(CubbyRequest)
+# admin.site.register(CubbyRequest)
