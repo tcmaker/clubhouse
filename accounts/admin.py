@@ -13,9 +13,11 @@ import json
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'last_name', 'first_name', 'email')
+    list_display = ('username', 'last_name', 'first_name', 'email', 'civicrm_membership_status')
 
     search_fields = ['last_name', 'first_name', 'email', 'username']
+
+    list_filter = ['civicrm_membership_status']
 
     ordering = ['last_name', 'first_name']
 
