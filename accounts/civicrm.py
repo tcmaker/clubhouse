@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import time
+
 
 from django.conf import settings
 # from accounts.models import User
@@ -134,16 +136,31 @@ def import_member_by_contact_id(contact_id):
     return u
 
 def get_membership_status(contact_id):
+    # Try to get a current membership
     resp = civicrm_query(
         entity='Membership',
         method='GET',
         action='get',
         options={
+            'active_only': 1,
             'contact_id': contact_id,
             'sort': 'id DESC',
             'rowCount': 1,
         }
     )
+    if resp['count'] == 0:
+        # No active memberships. Get the most recently created expired membership
+        resp = civicrm_query(
+            entity='Membership',
+            method='GET',
+            action='get',
+            options={
+                'contact_id': contact_id,
+                'sort': 'id DESC',
+                'rowCount': 1,
+            }
+        )
+
     if resp['count'] == 0:
         return None
 
