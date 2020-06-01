@@ -4,9 +4,14 @@ from .models import Reservation, Timeslot
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
     date_hierarchy = 'timeslot__start_time'
+
     list_display = ('__str__', 'reservation_area', 'reservation_start_time', 'reservation_end_time', 'member')
 
+    autocomplete_fields = ['member']
+
     list_filter = ('timeslot__area',)
+
+    search_fields = ['member__first_name', 'member__last_name', 'member__email', 'member__username', 'timeslot__area__name']
 
     def reservation_area(self, obj):
         return obj.timeslot.area.name
