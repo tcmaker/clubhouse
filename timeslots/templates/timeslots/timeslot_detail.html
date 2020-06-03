@@ -15,7 +15,7 @@
 
 <div class="row">
   <div class="col-md-6 mb-4">
-    {% if timeslot.has_capacity %}
+    {% if timeslot.has_capacity and not timeslot_has_passed %}
       <div class="card bg-light mb-4">
         <div class="card-header">Timeslot</div>
         <div class="card-body">

@@ -3,6 +3,9 @@ from calendar import HTMLCalendar
 from .models import Timeslot, SLUG_STRFTIME_FORMAT, LENGTH_OF_TIMESLOT
 from workshop.models import Area
 from collections import deque
+from django.utils.timezone import now as tz_now
+
+import pytz
 
 def parse_date_string(date_string):
     return datetime.strptime('%Y-%m-%d', date_string).date()
@@ -13,7 +16,6 @@ def datetimes_are_equal(left, right):
         return True
     return False
 
-
 def activate_riot_mode(start_time, end_time):
     for area in Area.objects.all():
         json = get_timeslots_for_range(area, start_time, end_time)
@@ -23,8 +25,6 @@ def activate_riot_mode(start_time, end_time):
             timeslot.is_closed_by_staff = True
             timeslot.save()
             timeslot.cancel_reservations(True)
-
-
 
 def get_timeslots_for_range(area, start_time, end_time):
     models = deque(area.timeslot_set.filter(start_time__gte=start_time, end_time__lte=end_time).order_by('start_time').all())
@@ -37,8 +37,10 @@ def get_timeslots_for_range(area, start_time, end_time):
 
     timeslots = []
 
-    while time_counter < end_time:
+    tz = pytz.timezone('America/Chicago')
+    now = tz_now().replace(tzinfo=tz)
 
+    while time_counter < end_time:
         # if time_counter.day == 11 and time_counter.hour == 4:
         #     import code; code.interact(local=dict(globals(), **locals()))
 
@@ -70,6 +72,12 @@ def get_timeslots_for_range(area, start_time, end_time):
                 timeslot['start'].strftime(SLUG_STRFTIME_FORMAT),
                 timeslot['end'].strftime(SLUG_STRFTIME_FORMAT),
             ])
+
+        if timeslot['start'].replace(tzinfo=tz) < now:
+            timeslot['rendering'] = 'background'
+            timeslot['className'] = 'timeslots-timeslot-past'
+            if 'title' in timeslot: del timeslot['title']
+
         timeslot['start'] = str(timeslot['start'])
         timeslot['end'] = str(timeslot['end'])
         timeslots.append(timeslot)
