@@ -5,6 +5,8 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 import boto3, os, re
 from botocore.exceptions import ParamValidationError
+from django.utils.timezone import now as tz_now
+from datetime import timedelta, datetime
 
 from .civicrm import get_member_info, get_membership_status
 
@@ -67,10 +69,14 @@ class User(AbstractUser):
         return False
 
     #### Cognito ####
+
+    @property
+    def __cognito_client(self):
+        return boto3.client('cognito-idp', region_name=os.environ.get('AWS_DEFAULT_REGION'))
+
     def change_cognito_password(self, new_password, is_temporary=False):
-        client = boto3.client('cognito-idp', region_name=os.environ['AWS_DEFAULT_REGION'])
         try:
-            response = client.admin_set_user_password(
+            response = self.__cognito_client.admin_set_user_password(
                 UserPoolId=settings.COGNITO_USER_POOL_ID,
                 Username=self.username,
                 Password=new_password,
@@ -80,6 +86,30 @@ class User(AbstractUser):
         except ParamValidationError as e:
             raise ArgumentError('Password requirements not met')
 
+    def get_cognito_record(self):
+        response = self.__cognito_client.admin_get_user(
+            UserPoolId=settings.COGNITO_USER_POOL_ID,
+            Username=self.username
+        )
+        if self.sub is None:
+            for attribute in response['UserAttributes']:
+                if attribute['Name'] == 'sub':
+                    self.sub = attribute['Value']
+                    self.save()
+                    break
+        return response
+
+    def cognito_reset_temporary_password(self):
+
+        # Does the user have a temporary password?
+        if not self.get_cognito_record()['UserStatus'] == 'FORCE_CHANGE_PASSWORD':
+            raise ValueError('User does not have a temporary password')
+
+        return self.__cognito_client.admin_create_user(
+            UserPoolId=settings.COGNITO_USER_POOL_ID,
+            Username=self.username,
+            MessageAction='RESEND'
+        )
 
     def create_cognito_record(self, email_verified=False):
         user_attributes =[
@@ -92,9 +122,8 @@ class User(AbstractUser):
         if (email_verified):
             user_attributes.append({'Name': 'email_verified', 'Value': 'True'})
 
-        client = boto3.client('cognito-idp', region_name=os.environ['AWS_DEFAULT_REGION'])
-        response = client.admin_create_user(
-            UserPoolId=os.environ['COGNITO_USER_POOL_ID'],
+        response = self.__cognito_client.admin_create_user(
+            UserPoolId=settings.COGNITO_USER_POOL_ID,
             Username=self.username,
             UserAttributes=user_attributes,
             DesiredDeliveryMediums=['EMAIL']
@@ -105,6 +134,30 @@ class User(AbstractUser):
                 self.save()
 
         return response
+
+    def create_cognito_record_with_password(self, password):
+        user_attributes = [
+            {'Name': 'email', 'Value': self.email},
+            {'Name': 'family_name', 'Value': self.last_name},
+            {'Name': 'given_name', 'Value': self.first_name},
+            {'Name': 'preferred_username', 'Value': self.username},
+            {'Name': 'email_verified', 'Value': 'True'},
+        ]
+
+        response = self.__cognito_client.admin_create_user(
+            UserPoolId=os.environ['COGNITO_USER_POOL_ID'],
+            Username=self.username,
+            UserAttributes=user_attributes,
+            MessageAction='SUPPRESS' # Don't send a welcome message.
+        )
+
+        for attribute in response['User']['Attributes']:
+            if attribute['Name'] == 'sub':
+                self.sub = attribute['Value']
+                self.save()
+                break
+
+        return (response, self.change_cognito_password(password))
 
     def sync_membership_status(self):
         if not self.civicrm_identifier: return

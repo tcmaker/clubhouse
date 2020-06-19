@@ -1,0 +1,53 @@
+{% extends 'approvals/index.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block heading %}
+  Pending Activations
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Registrations Pending Approval' 'approvals:registration_pending_invite_list' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-7">
+    <p>These people wish to join Twin Cities Maker.</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Last Name</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registration in registration_list %}
+          <tr>
+            <th scope="row">
+              <a href="{%url 'approvals:registration_pending_invite_detail' pk=registration.id %}">{{ registration.family_name }}
+            </th>
+            <td>{{ registration.given_name }}</td>
+            <td>{{ registration.email }}</td>
+            <td>{{ registration.phone_number }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-lg-4 offset-lg-1">
+    <div class="card">
+      <div class="card-header">
+        <h5>Volunteer Resources</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href="http://membership.tcmaker.org/">CRM</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

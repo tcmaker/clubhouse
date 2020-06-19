@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3732b870a2e2ea1e689dd861b8747167614354e95ad2cf5e1aa51633f2e4e124"
+            "sha256": "c511c6aabc37ca1da7526b1dbec7dd8afc0dd95192684c9c11dba9d3f1276339"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -37,11 +37,11 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:2a97c9e8fd2c0f8d8a92262a0ccbd00aad8c4786acb74f620f54164070cb72ff",
-                "sha256:650d67b0d47b7bc0d79f04cc944506823dbbc2f76f60e64ce6d7cdd89f60a2eb"
+                "sha256:5df1f3f84587b4d812f6f178031119b80920822b459bbb70ad49f431128655dc",
+                "sha256:d19fb5b7f27c29a7a036e36888e9584132e2f8edfa6ef906ea5a712e3e29962c"
             ],
             "index": "pypi",
-            "version": "==1.13.16"
+            "version": "==1.13.24"
         },
         "botocore": {
             "hashes": [
@@ -96,6 +96,14 @@
             "index": "pypi",
             "version": "==1.8.0"
         },
+        "django-csp": {
+            "hashes": [
+                "sha256:0a38aa9618c675cbf5f5e517e20d5846a3e100ef7b307e32e7fb18c58aa47723",
+                "sha256:d9ee5a8c6442aa54854e8de627c2826786208ed38fb4ea8ced08c42332673eb1"
+            ],
+            "index": "pypi",
+            "version": "==3.6"
+        },
         "django-extensions": {
             "hashes": [
                 "sha256:2f81b618ba4d1b0e58603e25012e5c74f88a4b706e0022a3b21f24f0322a6ce6",
@@ -138,11 +146,11 @@
         },
         "django-pipeline": {
             "hashes": [
-                "sha256:00cb9c989ee170dcc57ef8ecc9a4443150e9cfacdcce8c8583f3749e33b379fa",
-                "sha256:15af87416237a735a50e403361b9d13c10f84a3e76bdb6ce88f6e3105a68336a"
+                "sha256:c5d05f11a39327e3b6460d5264ce7c98616b22d7622016a549118d2a9624a003",
+                "sha256:cac66c77211ccaadecf2ba036cb3cc76574010980ad8c3c685b608b316882144"
             ],
             "index": "pypi",
-            "version": "==2.0.2"
+            "version": "==2.0.4"
         },
         "django-ses": {
             "hashes": [

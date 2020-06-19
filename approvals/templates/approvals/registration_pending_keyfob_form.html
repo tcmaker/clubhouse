@@ -1,0 +1,27 @@
+{% extends 'approvals/registration_pending_keyfob_detail.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Issue Keyfob' 'approvals:registration_pending_keyfob_form' pk=registration.id %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Assign Keyfob Code</div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form | crispy }}
+          <div class="form-group">
+            <input type="submit" value="Assign Code" class="btn btn-primary">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

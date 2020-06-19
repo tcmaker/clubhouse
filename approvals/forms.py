@@ -1,10 +1,12 @@
 from django import forms
 
-class HouseholdApprovalForm(forms.Form):
+class KeyfobCodeForm(forms.Form):
     keyfob_code = forms.CharField(
         label='Keyfob Code',
-        help_text="The code to the keyfob that you are issuing to the member"
+        help_text="All leading zeros will be stripped from the keyfob code."
     )
 
-    def clean(self):
-        super().clean()
+class MembershipApprovalForm(forms.Form):
+    activate_membership = forms.BooleanField(
+        label='This person attended orientation and is ready to join.'
+    )

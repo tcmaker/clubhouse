@@ -58,11 +58,9 @@
         <ul class="nav flex-column">
           <li class="nav-item"><a class="nav-link" href="{% url 'accounts:change_password' %}"><i class="fas fa-user-edit"></i> Change Password</a></li>
         </ul>
-
-	<h6>Membership and Dues</h6>
-	<ul class="nav flex-column">
-	  <li class="nav-item"><a class="nav-link" href="{% url 'renew:index' %}"><i class="fas fa-credit-card"></i> Membership Renewal</a></li>
-
+      	<h6>Membership and Dues</h6>
+      	<ul class="nav flex-column">
+      	  <li class="nav-item"><a class="nav-link" href="{% url 'renew:index' %}"><i class="fas fa-credit-card"></i> Membership Renewal</a></li>
 
         <h6>Timeslots</h6>
         <ul class="nav flex-column">
@@ -74,6 +72,9 @@
           <h6>Administrative</h6>
           <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" href="/admin/"><i class="fas fa-tools"></i> Admin Panel</a></li>
+            {% comment %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'approvals:index' %}"><i class="fas fa-check"></i> Approve New Members</a></li>
+            {% endcomment %}
           </ul>
         {% endif %}
       </div>

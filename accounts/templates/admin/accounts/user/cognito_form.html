@@ -1,0 +1,57 @@
+{% extends 'admin/base_site.html' %}
+{% load admin_modify static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">{% endblock %}
+
+{% block content_title %}
+  <h1>Cognito Admin</h1>
+{% endblock %}
+
+{% block content %}
+  {% if cognito_record %}
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset class="module aligned">
+        <h2>User Record</h2>
+        <div class="form-row">
+          <label>Username:</label>
+          <div class="readonly">{{ cognito_record.Username }}</div>
+        </div>
+        <div class="form-row">
+          <label>Created At</label>
+          <div class="readonly">{{ cognito_record.UserCreateDate }}</div>
+        </div>
+        <div class="form-row">
+          <label>Last Modified</label>
+          <div class="readonly">{{ cognito_record.UserLastModifiedDate }}</div>
+        </div>
+        <div class="form-row">
+          <label>Status</label>
+          <div class="readonly">{{ cognito_record.UserStatus }}</div>
+        </div>
+        {% for attribute in cognito_record.UserAttributes %}
+          {% if attribute.Name == 'email' or attribute.Name == 'email_verified' or attribute.Name == 'sub' %}
+            <div class="form-row">
+              <label>{{ attribute.Name }}</label>
+              <div class="readonly">{{ attribute.Value }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </fieldset>
+      <div class="submit-row">
+        {% if cognito_record.UserStatus == 'FORCE_CHANGE_PASSWORD' %}
+          {{ form }}
+          <input type="submit" value="Resend Temporary Password" class="default" name="_save">
+        {% else %}
+          <a href="/admin/accounts/user/{{ user.id }}/change/">Go Back</a>
+        {% endif %}
+      </div>
+    </form>
+  {% else %}
+    <p>No record exists.</p>
+    <div class="submit-row">
+      {{ form }}
+      <input type="submit" value="Create Cognito Account" class="default" name="_save">
+    </div>
+  {% endif %}
+{% endblock %}
