@@ -136,7 +136,7 @@ def cognito_admin(request, pk):
             try:
                 if action == 'create_account': user.create_cognito_record(True)
                 if action == 'reset_temporary_password': user.cognito_reset_temporary_password()
-                redirect(request, '/admin/accounts/user/%s/change/' % user.id)
+                return redirect('/admin/accounts/user/%s/change/' % user.id)
             except Exception as e:
                 messages.error(request, e)
     else:

@@ -94,7 +94,7 @@ CSP_DEFAULT_SRC = (
     'fonts.gstatic.com',
 )
 
-CSP_CONNECT_SRC = ('api.stripe.com',)
+CSP_CONNECT_SRC = ("'self'", 'api.stripe.com',)
 CSP_FRAME_SRC = ('js.stripe.com', 'hooks.stripe.com')
 CSP_SCRIPT_SRC = (
     "'self'",

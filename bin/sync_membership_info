@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/django/clubhouse
+exec /home/django/.local/bin/pipenv run ./manage.py sync_membership_info 1> /dev/null
