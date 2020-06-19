@@ -89,6 +89,8 @@ MIDDLEWARE = [
 # Content Security Policy (django-csp)
 CSP_DEFAULT_SRC = (
     "'self'",
+    "data:",
+    "'unsafe-inline'",
     'fonts.googleapis.com',
     'js.stripe.com',
     'fonts.gstatic.com',
@@ -98,6 +100,7 @@ CSP_CONNECT_SRC = ("'self'", 'api.stripe.com',)
 CSP_FRAME_SRC = ('js.stripe.com', 'hooks.stripe.com')
 CSP_SCRIPT_SRC = (
     "'self'",
+    "'unsafe-inline'",
     'cdnjs.cloudflare.com',
     'code.jquery.com',
     'js.stripe.com',
