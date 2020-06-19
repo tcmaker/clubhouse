@@ -124,7 +124,10 @@ def import_civicrm_contact_preview(request):
 @permission_required('accounts.add_user')
 def cognito_admin(request, pk):
     user = User.objects.get(pk=pk)
-    cognito_record = user.get_cognito_record()
+    try:
+        cognito_record = user.get_cognito_record()
+    except:
+        cognito_record = None
 
     if request.method == 'POST':
         form = CognitoAdminForm(request.POST)
@@ -133,7 +136,7 @@ def cognito_admin(request, pk):
             try:
                 if action == 'create_account': user.create_cognito_record(True)
                 if action == 'reset_temporary_password': user.cognito_reset_temporary_password()
-                redirect(request, 'admin/accounts/user/%s/change/' % user.id)
+                redirect(request, '/admin/accounts/user/%s/change/' % user.id)
             except Exception as e:
                 messages.error(request, e)
     else:
