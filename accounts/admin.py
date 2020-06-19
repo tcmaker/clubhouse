@@ -2,14 +2,6 @@ from django.contrib import admin
 from .models import User
 from . import views
 from django.urls import path
-from django import forms
-from django.shortcuts import redirect, render
-from django.http import HttpResponse, Http404
-from django.contrib import messages
-from django.contrib.auth.decorators import permission_required
-import json
-
-# class AccountsAdminSite(AdminSite):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -59,6 +51,7 @@ class UserAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('civicrm-import/', views.import_civicrm_contact, name="accounts_user_civicrm_import"),
-            path('civicrm-import/preview/', views.import_civicrm_contact_preview, name="accounts_user_civicrm_import_preview")
+            path('civicrm-import/preview/', views.import_civicrm_contact_preview, name="accounts_user_civicrm_import_preview"),
+            path('<int:pk>/cognito/', views.cognito_admin, name="accounts_user_cognito_admin"),
         ]
         return my_urls + urls

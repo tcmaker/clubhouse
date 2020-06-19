@@ -4,14 +4,26 @@ from . import views
 app_name = 'approvals'
 urlpatterns = [
     # New Signups
-    path('', views.index, name="approval_index"),
-    # path('pending/households/', views.PendingSignupList.as_view(), name="approval_membership_list"),
-    path('pending/households/<int:pk>', views.PendingSignupDetail.as_view(), name="approval_membership_detail"),
-    path('pending/households/<int:pk>/approve', views.ApproveHouseholdForm.as_view(), name="approval_membership_form"),
-    path('pending/households/<int:pk>/reject', views.RejectHouseholdForm.as_view(), name="approval_membership_rejection_form"),
-    #
-    # # path('pending/invites/', approval.PendingInvitationList.as_view(), name="approval_invite_list"),
-    # path('pending/invites/<int:pk>', approval.PendingInvitationDetail.as_view(), name="approval_invite_detail"),
-    # path('pending/invites/<int:pk>/approve', approval.PendingInvitationForm.as_view(), name="approval_invite_form"),
-    # path('pending/invites/<int:pk>/reject', approval.PendingInvitationForm.as_view(), name="approval_invite_rejection_form"),
+    path('', views.IndexView.as_view(), name="index"),
+
+    #### Registrations ####
+    path('registrations/', views.RegistrationIndexView.as_view(), name="registration_index"),
+
+    # First, we issue Keyfobs
+    path('registrations/pending-keyfobs/', views.RegistrationPendingKeyfobList.as_view(), name="registration_pending_keyfob_list"),
+    path('registrations/pending-keyfobs/<int:pk>/', views.RegistrationPendingKeyfobDetail.as_view(), name="registration_pending_keyfob_detail"),
+    path('registrations/pending-keyfobs/<int:pk>/form/', views.RegistrationPendingKeyfobForm.as_view(), name="registration_pending_keyfob_form"),
+
+    # After orientation, registrations need final approval.
+    path('registrations/pending-invites/', views.RegistrationPendingInviteList.as_view(), name="registration_pending_invite_list"),
+    path('registrations/pending-invites/<int:pk>/', views.RegistrationPendingInviteDetail.as_view(), name="registration_pending_invite_detail"),
+    path('registrations/pending-invites/<int:pk>/form/', views.RegistrationPendingInviteForm.as_view(), name="registration_pending_invite_form"),
+
+    #### Renewals ####
+
+    # TODO: Implementation
+
+    #### Family Member Invitations ####
+
+    # TODO: Implementation
 ]

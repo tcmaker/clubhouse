@@ -1,0 +1,11 @@
+{% extends 'signup/base.html' %}
+{% block title %}Membership Signup{% endblock %}
+
+{% block header_text %}Welcome{% endblock %}
+
+{% block content %}
+<p>
+  Here's what you need to get started.
+</p>
+<a class="btn btn-primary" href="{% url 'signup:account' %}">Get Started</a>
+{% endblock %}

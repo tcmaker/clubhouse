@@ -80,6 +80,7 @@ def import_active_members():
 
 def get_member_info(identifier):
     contact = civicrm_get(entity='Contact', entity_id=identifier)
+    print(contact)
     if contact == None:
         return None
     keyfob = civicrm_query(entity='Keyfob', method='GET', action='get', options={'contact_id':identifier})
@@ -172,6 +173,7 @@ def get_membership_status(contact_id):
     if status_id == 3: return 'Grace'
     if status_id == 4: return 'Expired'
     if status_id == 5: return 'Pending'
+    if status_id == 6: return 'Expired' # It's canceled, but those are the same to us
 
     # It's none of the ones we care about
     return None

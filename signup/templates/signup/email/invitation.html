@@ -1,0 +1,49 @@
+{% extends 'signup/email/base.html' %}
+
+{% block content %}
+<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+  Hello {{ registration.given_name }},
+</p>
+
+<p>
+  Thanks for attending orientation! As promised, here is the link to activate
+  your membership. For security reasons, this link <strong>expires in 14
+  days</strong>, so we encourage you to do this sooner rather than later.
+</p>
+
+<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+  When you follow the link below, you will receive a <strong>username</strong>
+  and create a <strong>password</strong>. You will need these two pieces of
+  information to sign into our reservation system.
+</p>
+
+<table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
+  <tbody>
+    <tr>
+      <td align="left" style="font-family: sans-serif; font-size: 14px; vertical-align: top; padding-bottom: 15px;">
+        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
+          <tbody>
+            <tr>
+              <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #3498db; border-radius: 5px; text-align: center;">
+                <a href="{{ registration.uuid }}" target="_blank" style="display: inline-block; color: #ffffff; background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #3498db;">Activate Membership</a> </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+  As always, if you have any questions or encounter any problems, don't hesitate to contact us. You
+  can always email <strong><a href="mailto:membership@tcmaker.org">membership@tcmaker.org</a></strong> to reach
+  someone on the Membership Team.
+</p>
+
+<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+  Happy trails!
+</p>
+<p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
+  The Twin Cities Maker Membership Team
+</p>
+{% endblock %}

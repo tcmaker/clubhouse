@@ -1,53 +1,96 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views import View
+from django.views.generic import RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+
 from django import urls
-from kiosk.models import Signup
-from .forms import HouseholdApprovalForm
-from . import activation
+from django.contrib import messages
+from django.utils.timezone import now as tz_now
+from signup.models import Registration
+from .forms import KeyfobCodeForm, MembershipApprovalForm
 
-from django.shortcuts import render
+class ApprovalMixin(LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = 'accounts.add_user'
 
-#### Signups ####
-
-@login_required
-def index(request):
-    context = {
-        'signups': Signup.pending_approval.all(),
-    }
-    return render(request, 'approvals/index.html', context)
-
-# class PendingSignupList(ListView):
-#     model = SignupProgress
-#     context_object_name = 'signups'
-class PendingSignupDetail(LoginRequiredMixin, DetailView):
-    model = Signup
-    template_name='approvals/signup_detail.html'
-    context_object_name = 'signup'
-
-class ApproveHouseholdForm(LoginRequiredMixin, FormView):
-    template_name = 'approvals/approve_household.html'
-    form_class = HouseholdApprovalForm
-
-    def get(self, request, *args, **kwargs):
-        progress = Signup.objects.get(pk=kwargs['pk'])
-        self.initial = {
-            'username': progress.data['person']['username'],
+class IndexView(ApprovalMixin, View):
+    def get(self, request):
+        registrations = {
+            'pending_keyfobs': Registration.pending.pending_keyfobs,
+            'pending_approval': Registration.pending.pending_approval,
         }
 
+        return render(request, 'approvals/index.html', {
+            'registrations': registrations,
+        })
+
+#### Registrations ####
+
+class RegistrationIndexView(ApprovalMixin, RedirectView):
+    pass
+
+# Pending Keyfobs
+class RegistrationPendingKeyfobList(ApprovalMixin, ListView):
+    model = Registration
+    queryset = Registration.pending.pending_keyfobs()
+    template_name = 'approvals/registration_pending_keyfob_list.html'
+
+    def get_context_data(self, **kwargs):
+        ret = super().get_context_data(**kwargs)
+        print(ret)
+        return ret
+
+class RegistrationPendingKeyfobDetail(ApprovalMixin, DetailView):
+    model = Registration
+    queryset = Registration.pending.pending_keyfobs()
+    template_name = 'approvals/registration_pending_keyfob_detail.html'
+
+class RegistrationPendingKeyfobForm(ApprovalMixin, FormView):
+    template_name = 'approvals/registration_pending_keyfob_form.html'
+    form_class = KeyfobCodeForm
+
+    def setup(self, request, *args, **kwargs):
+        self.registration = Registration.pending.pending_keyfobs().get(pk=kwargs['pk'])
         self.extra_context = {
-            'signup': progress,
+            'registration': self.registration,
         }
-        return super().get(self, request, *args, **kwargs)
+        return super().setup(request, *args, **kwargs)
 
     def form_valid(self, form):
-        # import code; code.interact(local=dict(globals(), **locals()))
-        activation.approve_signup(Signup.objects.get(pk=int(self.kwargs['pk'])), form.cleaned_data['keyfob_code'])
-        return HttpResponseRedirect(urls.reverse('approvals:approval_index'))
+        self.registration.keyfob_code = form.cleaned_data['keyfob_code']
+        self.registration.save()
+        self.registration.add_civicrm_keyfob_code()
+        self.registration.keyfob_issued_at = tz_now()
+        self.registration.save()
+        return HttpResponseRedirect(urls.reverse('approvals:registration_pending_keyfob_list'))
 
-class RejectHouseholdForm(LoginRequiredMixin, FormView):
-    template_name = 'approvals/approve_household.html'
-    form_class = HouseholdApprovalForm
+# Pending Final Approval
+class RegistrationPendingInviteList(ApprovalMixin, ListView):
+    model = Registration
+    queryset = Registration.pending.pending_approval()
+    template_name = 'approvals/registration_pending_invite_list.html'
+
+class RegistrationPendingInviteDetail(ApprovalMixin, DetailView):
+    model = Registration
+    queryset = Registration.pending.pending_approval()
+    template_name = 'approvals/registration_pending_invite_detail.html'
+
+class RegistrationPendingInviteForm(ApprovalMixin, FormView):
+    template_name = 'approvals/registration_pending_invite_form.html'
+    form_class = MembershipApprovalForm
+
+    def setup(self, request, *args, **kwargs):
+        self.registration = Registration.pending.pending_approval().get(pk=kwargs['pk'])
+        self.extra_context = {
+            'registration': self.registration,
+        }
+        return super().setup(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.registration.send_invitation_email()
+        self.registration.account_invitation_created_at = tz_now()
+        self.registration.save()
+        return HttpResponseRedirect(urls.reverse('approvals:registration_pending_keyfob_list'))

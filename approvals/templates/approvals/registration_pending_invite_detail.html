@@ -1,4 +1,14 @@
-{% extends 'dashboard/base.html' %}
+{% extends 'approvals/registration_pending_invite_list.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb registration 'approvals:registration_pending_invite_detail' pk=registration.id %}
+{% endblock %}
+
+{% block heading %}
+  {{ registration }}
+{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -15,12 +25,12 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h6>Name</h6>
-          {{ signup }}
+          <h6>Name:</h6>
+          {{ registration }}
         </li>
         <li class="list-group-item">
-          <h6>Desired Username</h6>
-          {{ signup.data.person.username }}
+          <h6>Email:</h6>
+          {{ registration.email }}
         </li>
       </ul>
     </div>
@@ -33,18 +43,13 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h6>Email</h6>
-          {{ signup.data.person.email }}
-        </li>
-
-        <li class="list-group-item">
-          <h6>Phone</h6>
-          {{ signup.data.person.phone_number }}
+          <h6>Phone:</h6>
+          {{ registration.phone_number }}
         </li>
 
         <li class="list-group-item">
           <h6>Address:</h6>
-          {{ signup.address_lines | join:"<br>" }}
+          {{ registration.address_lines | join:"<br>" }}
         </li>
       </ul>
     </div>
@@ -55,12 +60,17 @@
   <div class="col-md-6 mb-4">
     <div class="card">
       <div class="card-header">
-        <h5>Dues</h5>
+        <h5>External Identifiers</h5>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h6>Dues Plan</h6>
-          {{ signup.dues_plan.name }}
+          <h6>CiviCRM Contact ID:</h6>
+          <code>{{ registration.civicrm_identifier }}</code>
+        </li>
+
+        <li class="list-group-item">
+          <h6>Stripe Customer ID:</h6>
+          <code>{{ registration.stripe_identifier }}</code>
         </li>
       </ul>
     </div> <!-- card -->
@@ -77,7 +87,7 @@
   </div>
 </div>
 
-<h4>Choose {{ signup.data.person.given_name}}'s Fate!</h4>
+<h4>Choose {{ registration.given_name}}'s Fate!</h4>
 
 <div class="row">
   <div class="col-md-12">
@@ -85,15 +95,12 @@
       <div class="card-body">
         <div class="row">
           <div class="col-sm-2">
-            <a href="{%url 'approvals:approval_membership_form' pk=signup.id %}" class="btn btn-primary">Approve</a>
+            <a href="{% url 'approvals:registration_pending_invite_form' pk=registration.id %}" class="btn btn-primary">Approve</a>
           </div>
           <div class="col-sm-2">
-            <a href="{%url 'approvals:approval_index' %}" class="btn btn-outline-secondary">Do nothing</a>
+            <a href="{% url 'approvals:registration_pending_invite_list' %}" class="btn btn-outline-secondary">Do nothing</a>
           </div>
-
-          <div class="col-md-8 text-right">
-            <a href="{%url 'approvals:approval_membership_rejection_form' pk=signup.id %}" class="btn btn-danger">Reject</a>
-          </div>
+        </div>
       </div>
     </div>
   </div>

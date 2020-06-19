@@ -1,0 +1,109 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h3>{{ signup }}</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Basic Information</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h6>Name</h6>
+          {{ signup }}
+        </li>
+        <li class="list-group-item">
+          <h6>Desired Username</h6>
+          {{ signup.data.username }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Contact Information</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h6>Email</h6>
+          {{ signup.data.email }}
+        </li>
+
+        <li class="list-group-item">
+          <h6>Phone</h6>
+          {{ signup.data.phone_number }}
+        </li>
+
+        <li class="list-group-item">
+          <h6>Address:</h6>
+          {{ signup.address_lines | join:"<br>" }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Dues</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <h6>Email</h6>
+          {{ signup.data.email }}
+        </li>
+
+        <li class="list-group-item">
+          <h6>Phone</h6>
+          {{ signup.data.phone_number }}
+        </li>
+
+        <li class="list-group-item">
+          <h6>Address:</h6>
+          {{ signup.address_lines | join:"<br>" }}
+        </li>
+      </ul>
+    </div> <!-- card -->
+  </div> <!-- col -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Legal</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>Choose {{ signup.data.given_name}}'s Fate!</h4>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <a href="{%url 'signup:approval_membership_form' pk=signup.id %}" class="btn btn-primary">Approve</a>
+          </div>
+          <div class="col-sm-2">
+            <a href="{%url 'signup:approval_index' %}" class="btn btn-outline-secondary">Do nothing</a>
+          </div>
+
+          <div class="col-md-8 text-right">
+            <a href="{%url 'signup:approval_membership_rejection_form' pk=signup.id %}" class="btn btn-danger">Reject</a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

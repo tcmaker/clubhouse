@@ -8,7 +8,7 @@ from .models import User
 import json
 #from . import rest_actions
 
-from .forms import PasswordChangeForm, CiviCRMContactImportForm
+from .forms import PasswordChangeForm, CiviCRMContactImportForm, CognitoAdminForm
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -119,3 +119,32 @@ def import_civicrm_contact_preview(request):
 
     payload = json.dumps(payload)
     return HttpResponse(payload, content_type = 'application/json')
+
+@login_required
+@permission_required('accounts.add_user')
+def cognito_admin(request, pk):
+    user = User.objects.get(pk=pk)
+    cognito_record = user.get_cognito_record()
+
+    if request.method == 'POST':
+        form = CognitoAdminForm(request.POST)
+        if form.is_valid():
+            action = form.cleaned_data['cognito_action']
+            try:
+                if action == 'create_account': user.create_cognito_record(True)
+                if action == 'reset_temporary_password': user.cognito_reset_temporary_password()
+                redirect(request, 'admin/accounts/user/%s/change/' % user.id)
+            except Exception as e:
+                messages.error(request, e)
+    else:
+        if cognito_record is not None:
+            initial_vals = {'cognito_action': 'reset_temporary_password'}
+        else:
+            initial_vals = {'cognito_action': 'create_account'}
+        form = CognitoAdminForm(initial_vals)
+
+    return render(request, 'admin/accounts/user/cognito_form.html', {
+        'form': form,
+        'user': user,
+        'cognito_record': cognito_record,
+    })

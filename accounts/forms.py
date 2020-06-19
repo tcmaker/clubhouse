@@ -50,3 +50,6 @@ class CiviCRMContactImportForm(forms.Form):
     create_sso_account_and_invite = forms.BooleanField(
         help_text='Create SSO account and invite to dashboard', required=False
     )
+
+class CognitoAdminForm(forms.Form):
+    cognito_action = forms.CharField(widget=forms.HiddenInput())
