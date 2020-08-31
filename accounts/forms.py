@@ -48,7 +48,7 @@ class PasswordChangeForm(forms.Form):
 class CiviCRMContactImportForm(forms.Form):
     contact_id = forms.IntegerField(help_text='CiviCRM Contact ID', required=True)
     create_sso_account_and_invite = forms.BooleanField(
-        help_text='Create SSO account and invite to dashboard', required=False
+        help_text='Create SSO account and invite to dashboard', default=True, required=False
     )
 
 class CognitoAdminForm(forms.Form):
