@@ -26,10 +26,10 @@ urlpatterns = [
 
     path('', include('landing.urls')),
     path('accounts/', include('accounts.urls')),
-    # path('approvals/', include('approvals.urls')),
+    path('approvals/', include('approvals.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('renew/', include('renew.urls')),
-    # path('signup/', include('signup.urls')),
+    path('signup/', include('signup.urls')),
     path('timeslots/', include('timeslots.urls')),
 
     # Documentation for the project

@@ -3,12 +3,12 @@ from django.views.generic.edit import FormView
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.http import Http404, HttpResponse
-from .civicrm import get_member_info
-from .models import User
+from ..civicrm import get_member_info
+from ..models import User, Invitation
 import json
 #from . import rest_actions
 
-from .forms import PasswordChangeForm, CiviCRMContactImportForm, CognitoAdminForm
+from ..forms import PasswordChangeForm, CiviCRMContactImportForm, CognitoAdminForm
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -89,7 +89,8 @@ def import_civicrm_contact(request):
                 u.sync_membership_status()
 
                 if form.cleaned_data['create_sso_account_and_invite']:
-                    u.create_cognito_record(True) # If the data is already in CiviCRM, we assume the email has been verified.
+                    # u.create_cognito_record(True) # If the data is already in CiviCRM, we assume the email has been verified.
+                    invite = Invitation.objects.create(user_id = u.id)
 
                 return redirect('/admin/accounts/user/' + str(u.id))
             except Exception as e:
@@ -134,7 +135,9 @@ def cognito_admin(request, pk):
         if form.is_valid():
             action = form.cleaned_data['cognito_action']
             try:
-                if action == 'create_account': user.create_cognito_record(True)
+                if action == 'create_account':
+                    user.create_cognito_record(True)
+
                 if action == 'reset_temporary_password': user.cognito_reset_temporary_password()
                 return redirect('/admin/accounts/user/%s/change/' % user.id)
             except Exception as e:

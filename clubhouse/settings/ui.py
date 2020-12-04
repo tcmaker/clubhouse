@@ -10,6 +10,10 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATES = [
@@ -34,6 +38,7 @@ STATIC_URL = '/static/'
 
 # TODO: setup Pipeline and add 'pipeline.finders.PipelineFinder',
 STATICFILES_FINDERS = [
+    'compressor.finders.CompressorFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]

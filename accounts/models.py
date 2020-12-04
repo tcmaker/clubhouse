@@ -1,9 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.core.mail import send_mail, EmailMessage
 # from . import rest_actions
 from django.utils.translation import ugettext_lazy as _
-import boto3, os, re
+import boto3, os, re, uuid
 from botocore.exceptions import ParamValidationError
 from django.utils.timezone import now as tz_now
 from datetime import timedelta, datetime
@@ -176,3 +180,33 @@ class User(AbstractUser):
             self.civicrm_keyfob_code = info['keyfob']
         self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
         self.save()
+
+def two_weeks_from_now():
+    return tz_now() + timedelta(days=14)
+
+class Invitation(models.Model):
+    uuid = models.UUIDField('Invite Code', default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField('Created At', auto_now_add=True)
+    expires_at = models.DateTimeField('Expires At', default=two_weeks_from_now)
+    accepted_at = models.DateTimeField('Accepted At', blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+
+
+@receiver(post_save, sender=Invitation)
+def send_invite_email(sender, instance, *args, **kwargs):
+    # Delete old invites
+    for invite in Invitation.objects.filter(user_id=instance.user_id).exclude(pk=instance.id).all():
+        invite.delete()
+
+    # Send invite email
+    if kwargs['created'] == True:
+        context = {
+            'invitation': instance,
+            'hostname': settings.WEBAPP_URL_BASE
+        }
+        msg_html = render_to_string('email/invite_member_to_clubhouse.html', context)
+        msg = EmailMessage(subject='Register for Twin Cities Maker', body=msg_html, to=[instance.user.email])
+        msg.content_subtype = "html"  # Main content is now text/html
+        print("about to send message")
+        print(msg.send())
+        print("just sent message")

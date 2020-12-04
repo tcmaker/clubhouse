@@ -28,7 +28,6 @@ class IndexView(ApprovalMixin, View):
         })
 
 #### Registrations ####
-
 class RegistrationIndexView(ApprovalMixin, RedirectView):
     pass
 
