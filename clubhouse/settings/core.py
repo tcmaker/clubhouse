@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Libraries
+    'compressor',
     'crispy_forms',
     'django_bootstrap_breadcrumbs',
     'django_extensions',

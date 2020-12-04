@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views import View
 from django.utils.timezone import now as tz_now
 from ..forms import AccountForm, ContactForm, StripeForm, LegalForm, InviteHouseholdForm
-from ..models import Registration, Invitation
+from ..models import Registration
 from . import steps
 
 

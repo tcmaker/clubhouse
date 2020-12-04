@@ -1,3 +1,4 @@
+
 from django import forms
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import password_validation
@@ -27,7 +28,7 @@ class PasswordChangeForm(forms.Form):
         password_confirmation = self.cleaned_data.get("password_confirmation")
         if password and password_confirmation and password != password_confirmation:
             raise forms.ValidationError(
-                self.error_messages['password_mismatch'],
+                'passwords do not match',
                 code='password_mismatch',
             )
         return password_confirmation

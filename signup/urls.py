@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import signup, invite, steps
+from .views import signup, steps
 
 app_name = 'signup'
 

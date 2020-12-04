@@ -1,0 +1,17 @@
+{% extends 'accounts/onboarding/base.html' %}
+
+{% block title %}How to Use Your Account{% endblock %}
+
+{% block header_text %}How to Use Your Account{% endblock %}
+
+{% block content %}
+<p>
+  You've set up your account! To get started, visit this URL:
+</p>
+
+<p><a href="https://localhost:8000/dashboard/">https://localhost:8000/dashboard/</a></p>
+
+<p>Username: {{ user.username }}</p>
+<p>Password: <em>use the password you just entered</em></p>
+
+{% endblock %}
