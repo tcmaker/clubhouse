@@ -135,7 +135,7 @@ class Registration(Applicant):
         ret = [self.address_street1]
 
         if self.address_street2:
-            ret.append(self.data['address_street2'])
+            ret.append(self.address_street2)
 
         ret.append("%s %s, %s" % (
             self.address_city,
