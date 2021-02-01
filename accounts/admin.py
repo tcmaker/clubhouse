@@ -5,7 +5,19 @@ from django.urls import path
 
 @admin.register(Invitation)
 class InvitationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('user_family_name', 'user_given_name',  'user_email', 'created_at', 'expires_at', 'accepted_at')
+
+    search_fields = ['user__first_name', 'user__last_name', 'user__email', 'uuid']
+
+    def user_family_name(self, obj):
+        return obj.user.last_name
+
+    def user_given_name(self, obj):
+        return obj.user.first_name
+
+    def user_email(self, obj):
+        return obj.user.email
+
 
 
 @admin.register(User)

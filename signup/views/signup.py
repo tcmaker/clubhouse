@@ -14,6 +14,7 @@ from django.conf import settings
 import django.urls
 import stripe
 import os
+import uuid
 
 def index(request):
     request.session.flush()
@@ -145,6 +146,14 @@ class SetupFeeView(SignupWizardView):
             )
             registration.stripe_identifier = customer.id
             registration.save()
+
+        # https://stripe.com/docs/api/idempotent_requests
+        if 'stripe-idempotency-key' not in request.session:
+            print("setting idempotency key")
+            request.session['stripe-idempotency-key'] = str(uuid.uuid4())
+        else:
+            print("Found idempotency key: %s" % request.session['stripe-idempotency-key'])
+
         return super().get(request)
 
     def post(self, request):
@@ -158,13 +167,17 @@ class SetupFeeView(SignupWizardView):
             customer.source = form.cleaned_data['stripe_token']
             customer.save()
 
+            import code; code.interact(local=dict(globals(), **locals()))
+
             # Charge $20.00
             charge = stripe.Charge.create(
                 customer = customer.id,
                 amount = 2000, # $20.00 is 2,000 pennies
                 currency = 'usd',
                 description = 'One-time Setup Fee',
-                receipt_email = registration.email
+                receipt_email = registration.email,
+                # https://stripe.com/docs/api/idempotent_requests
+                idempotency_key = request.session['stripe-idempotency-key']
             )
 
             if charge.outcome.network_status == 'approved_by_network':

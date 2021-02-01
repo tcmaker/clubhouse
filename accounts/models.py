@@ -191,7 +191,6 @@ class Invitation(models.Model):
     accepted_at = models.DateTimeField('Accepted At', blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
-
 @receiver(post_save, sender=Invitation)
 def send_invite_email(sender, instance, *args, **kwargs):
     # Delete old invites
