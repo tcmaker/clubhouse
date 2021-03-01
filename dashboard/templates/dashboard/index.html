@@ -10,7 +10,7 @@
 <div class="row">
   <div class="col-md-7">
     <div class="card mb-4">
-      <div class="card-header">Welcome</div>
+      <div class="card-header"><h4>Welcome </h4></div>
       <div class="card-body">
         <p>
           This is the new Twin Cities Maker member dashboard. In time, you
@@ -18,7 +18,6 @@
           broken tools, and meet all of your other bureaucratic needs. For the
           time being, however, we're using it to gradually re-open the shop.
         </p>
-        <a class="btn btn-primary" href="/timeslots">Reserve timeslots</a>
       </div>
     </div>
 
@@ -32,9 +31,28 @@
           <em>You haven't reserved any timeslots yet. It's not too late to
           <a href="/timeslots/">do something about that</a>!</em>
         </div>
+        <a class="btn btn-primary" href="/timeslots">Reserve timeslots</a>
       {% endfor %}
     </div>
-  </ul>
+    <div class="card mb-4">
+      <div class="card-header">Membership & Dues</div>
+      <div class="card-body">
+        <p>
+          Follow this link to pay your Membership Dues.
+        </p>
+          <a class="btn btn-primary" href="/renew">Pay Dues</a>
+        </div>
+      </div>
+    <div class="card mb-4">
+      <div class="card-header">Membership Handbook & Member Resources</div>
+      <div class="card-body">
+        <p>
+            Whether your just getting started or an old hand we have resources to help you on your quest to learn and make things.
+        </p>
+          <a class="btn btn-primary" href="https://go.tcmaker.org/handbook">Member Handbook</a>
+        </div>
+        </div>
+    </ul>
   <div class="col-md-3 offset-md-1">
     <div class="card bg-info text-white mb-4">
       <div class="card-header">The New Plan</div>
