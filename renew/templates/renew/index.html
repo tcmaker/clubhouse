@@ -1,15 +1,15 @@
 {% extends 'dashboard/index.html' %}
 {% load django_bootstrap_breadcrumbs %}
 
-{% block title %}Membership Renewal{% endblock %}
+{% block title %}Dues{% endblock %}
 
 {% block breadcrumbs %}
   {{ block.super }}
-  {% breadcrumb 'Membership Renewal' 'renew:index' %}
+  {% breadcrumb 'Dues' 'renew:index' %}
 {% endblock %}
 
 {% block heading %}
-  Renew Your Membership
+  Pay Dues
 {% endblock %}
 
 {% block content %}
@@ -17,13 +17,13 @@
   <div class="col-md-6 offset-md-3">
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title">Renew Your Membership!</h5>
+        <h5 class="card-title">Pay Dues</h5>
           <p>
-            Follow this link below to renew your membership.
+            Follow this link below to pay your dues.
           </p>
+          <a class="btn btn-primary" href="{{ renewal_url }}">Pay Dues</a>
       </div>
     </div>
-    <a class="btn btn-primary" href="{{ renewal_url }}">Wow, let's do that!</a>
   </div>
 </div>
 {% endblock %}

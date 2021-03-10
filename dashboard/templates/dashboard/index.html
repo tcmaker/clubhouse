@@ -21,27 +21,36 @@
       </div>
     </div>
 
-    <h4>Your Upcoming Reservations</h4>
-    <ul>
-      {% for reservation in request.user.reservation_set.upcoming %}
-        <li><a href="/timeslots/reservations/{{ reservation.id }}">{{ reservation.timeslot.area.name }}: {{ reservation.timeslot.start_time }}</a></li>
-
-      {% empty %}
-        <div class="alert alert-secondary">
-          <em>You haven't reserved any timeslots yet. It's not too late to
-          <a href="/timeslots/">do something about that</a>!</em>
+    <div class="card mb-4">
+      <div class="card-header">Your Upcoming Reservations</div>
+        {% if request.user.reservation_set.upcoming %}
+          <ul class="list-group list-group-flush">
+            {% for reservation in request.user.reservation_set.upcoming %}
+              <li class="list-group-item">
+                <a href="/timeslots/reservations/{{ reservation.id }}">{{ reservation.timeslot.area.name }}:
+                  {{ reservation.timeslot.start_time }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="card-body">
+            <p><em>You haven't reserved any timeslots yet. It's not too late to
+            <a href="/timeslots/">do something about that</a>!</em></p>
+          </div>
+        {% endif %}
+        <div class="card-body">
+          <a class="btn btn-primary" href="/timeslots">Reserve timeslots</a>
         </div>
-        <a class="btn btn-primary" href="/timeslots">Reserve timeslots</a>
-      {% endfor %}
     </div>
+
     <div class="card mb-4">
       <div class="card-header">Membership & Dues</div>
       <div class="card-body">
         <p>
           Follow this link to pay your Membership Dues.
         </p>
-          <a class="btn btn-primary" href="/renew">Pay Dues</a>
-        </div>
+        <a class="btn btn-primary" href="/renew">Pay Dues</a>
+      </div>
       </div>
     <div class="card mb-4">
       <div class="card-header">Membership Handbook & Member Resources</div>
@@ -49,47 +58,13 @@
         <p>
             Whether your just getting started or an old hand we have resources to help you on your quest to learn and make things.
         </p>
-          <a class="btn btn-primary" href="https://go.tcmaker.org/handbook">Member Handbook</a>
-        </div>
-        </div>
-    </ul>
-  <div class="col-md-3 offset-md-1">
-    <div class="card bg-info text-white mb-4">
-      <div class="card-header">The New Plan</div>
-      <div class="card-body">
-        <h5 class="card-title">How This Works</h5>
-        <p>
-          Until things settle down, you'll be able to reserve <strong>one time slot</strong>
-          per day, during which you will be able to work in a single area of
-          the shop. Each timeslot is <strong>three hours long</strong>. At the start of your
-          timeslot, your keyfob will be automatically activated, and you'll be able to enter
-          and the shop as normal. At the end of your timeslot, however, we'll lock
-          your keyfob until your next timeslot begins.
-        </p>
-
-        <p>
-          Please take the time to read our emergency rules below, and don't hesitate
-          to contact us with your questions and concerns.
-        </p>
-        <h5>RULES WHEN IN THE SHOP: </h5>
-        <p>
-          <ul>
-            <li><h6>Wear a Mask</h6></li>
-              <li>Face coverings of any type are recommended to prevent the spread of germs and to help keep others safe. They are especially recommended when social distancing cannot be adequately maintained. </li>
-            <li><h6>Wash Your Hands</h6></li>
-              <li>Please wash your hands frequently. Sanitize them as you move around the shop with the hand sanitizer located throughout the shop. </li>
-            <li><h6>Sanitize</h6></li>
-              <li>Wipe down the part of equipment that gets touched (handles, buttons) before and after use. If the equipment is delicate, please use the correct  cleaning agent.</li>
-              <li>Please only spray cleaner onto a paper-towel and then wipe down handles / buttons. DO NOT spray cleaner onto the equipment. This can damage motors and electrical components.</li>
-            <li><h6>Please limit your work to the area that you have signed up for.</h6></li> 
-              <li>Obviously people will need to do things like use the restroom, wash their hands, or grab a few items from storage; however, please avoid working in other areas.</li> 
-            <li><h6>Posted Directions</h6></li>
-            <li>Please take the time to read and follow signs which will give more specific instructions in each department. </li>
-            <li><h6>Please follow the Health Departments recommendations https://www.health.state.mn.us/diseases/coronavirus/prevention.html and remain at least six feet away from other people at all times</h6></li>
-          </ul>
-        </p>  
+        <a class="btn btn-primary" href="https://go.tcmaker.org/handbook">Member Handbook</a>
       </div>
     </div>
+  </div>
+
+  <div class="col-md-3 offset-md-1">
+    <!-- empty for now -->
   </div>
 </div>
 {% endblock %}

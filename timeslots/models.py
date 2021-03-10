@@ -105,7 +105,7 @@ class Timeslot(models.Model):
 
 class ReservationManager(models.Manager):
     def upcoming(self):
-        return self.get_queryset().order_by('timeslot__start_time').filter(timeslot__start_time__gte=tz_now())
+        return self.get_queryset().order_by('timeslot__start_time').filter(timeslot__end_time__gte=tz_now())
 
 class Reservation(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
