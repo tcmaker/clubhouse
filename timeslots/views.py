@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect
 from workshop.models import Area
 from django.utils.dateparse import parse_datetime
 from datetime import date, datetime
-from .utils import get_timeslots_for_range, get_or_create_timeslot
-from .forms import ReservationForm, CancelReservationForm, TimeslotForm
+from .utils import get_timeslots_for_range, get_or_create_timeslot, close_area_by_date_range, open_area_by_date_range
+from .forms import ReservationForm, CancelReservationForm, TimeslotForm, CloseTimeslotRangeForm
 from .models import Reservation
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -61,6 +61,31 @@ def close_timeslot(request, area_id, slug):
         'form': form
     })
 
+@login_required
+@membership_required
+def area_close_block_of_timeslots(request, area_id):
+    area = Area.objects.get(pk=area_id)
+
+    # HACK: do it right with roles, etc
+    if request.user.id != area.area_manager.id:
+        messages.error(request, 'Only the %s manager can do that' % area.name)
+        return redirect('/timeslots')
+
+    if request.method == 'POST':
+        form = CloseTimeslotRangeForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['desired_state'] == 'open':
+                open_area_by_date_range(area, form.cleaned_data['start_time'], form.cleaned_data['end_time'])
+            else:
+                close_area_by_date_range(area, form.cleaned_data['start_time'], form.cleaned_data['end_time'])
+            return HttpResponseRedirect('/timeslots/' + str(area.id))
+    else:
+        form = CloseTimeslotRangeForm()
+
+    return render(request, 'timeslots/area_close_block_of_timeslots.html', {
+        'area': area,
+        'form': form,
+    })
 
 @login_required
 @membership_required

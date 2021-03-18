@@ -20,6 +20,22 @@
   <link rel="stylesheet" href="{% static "fullcalendar/packages/list/main.css" %}"  />
   <link rel='stylesheet' href="{% static "fullcalendar/packages/bootstrap/main.min.css" %}" />
 
+  <style>
+    .fa::before {
+      display: inline-block;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    .fa-clock-o::before {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f017";
+    }
+
+  </style>
+
   <title>{% block title %}Clubhouse{% endblock %} -- Twin Cities Maker</title>
 </head>
 <body>

@@ -12,9 +12,9 @@ SLUG_STRFTIME_FORMAT = "%Y%m%d%H%M"
 HUMANIZED_TIME_FORMAT = "%-I:%M %p"
 HUMANIZED_DATE_FORMAT = "%h %d, %Y"
 
-LENGTH_OF_TIMESLOT = 3
+LENGTH_OF_TIMESLOT = 1
 
-MEMBER_MAX_DAILY_TIMESLOTS = 1
+MEMBER_MAX_DAILY_TIMESLOTS = 24
 
 CANCEL_RESERVATION_TEXT = '''%s,
 
@@ -135,9 +135,12 @@ class Reservation(models.Model):
             timeslot__area__is_exempt_from_member_timeslot_quota=False
         )
         total = total.filter(member_id=self.member.id).count()
-        return total < 1
+        return total < MEMBER_MAX_DAILY_TIMESLOTS
 
         return MEMBER_MAX_DAILY_TIMESLOTS > total
+
+    def __member_is_attempting_to_double_book(self):
+        pass
 
     def clean(self):
         if not self.__member_has_open_reservations():

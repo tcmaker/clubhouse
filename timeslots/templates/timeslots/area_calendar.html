@@ -20,14 +20,20 @@
   to claim it as your very own.
 </p>
 
-<p>
-  <strong>Remember:</strong> You can only book <em>one timeslot per day,</em>
-  but there is no limit to how many days you can come in.
-</p>
+{% if user.id == area.area_manager.id %}
+  <div class="alert alert-info">
+    <h4 class="alert-heading">Close and Open Blocks of Timeslots!</h4>
+    <p>
+      As you are the manager of this area, you can
+      <a class="alert-link" href="/timeslots/{{ area.id }}/close">use this form</a> to open and
+      close several timeslots at once.
+    </p>
+  </div>
+{% endif %}
 
 <h5 class="mb-4">Current Openings</h5>
 
-<div id="script-warning" style="display:none;">oops</div>
+<div id="script-warning" style="display:none;"></div>
 
 <div id="loading" style="display:none;">loading</div>
 

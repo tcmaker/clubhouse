@@ -16,15 +16,33 @@ def datetimes_are_equal(left, right):
         return True
     return False
 
-def activate_riot_mode(start_time, end_time):
-    for area in Area.objects.all():
+def close_area_by_date_range(area, start_time, end_time):
         json = get_timeslots_for_range(area, start_time, end_time)
+        timeslots = []
         for json_object in json:
             timeslot = get_or_create_timeslot(json_object['id'])
-            print(timeslot.humanize(include_date=True, include_area=True))
             timeslot.is_closed_by_staff = True
             timeslot.save()
             timeslot.cancel_reservations(True)
+            timeslots.append(timeslot)
+        return timeslots
+
+def open_area_by_date_range(area, start_time, end_time):
+    json = get_timeslots_for_range(area, start_time, end_time)
+    timeslots = []
+    for json_object in json:
+        timeslot = get_or_create_timeslot(json_object['id'])
+        timeslot.is_closed_by_staff = False
+        timeslot.save()
+        timeslots.append(timeslots)
+    return timeslots
+
+def activate_riot_mode(start_time, end_time):
+    for area in Area.objects.all():
+        timeslots = close_area_by_date_range(area, start_time, end_time)
+        for timeslot in timeslots:
+            print(timeslot.humanize(include_date=True, include_area=True))
+
 
 def get_timeslots_for_range(area, start_time, end_time):
     models = deque(area.timeslot_set.filter(start_time__gte=start_time, end_time__lte=end_time).order_by('start_time').all())

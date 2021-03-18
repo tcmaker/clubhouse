@@ -1,0 +1,58 @@
+{% extends 'timeslots/area_calendar.html' %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block heading %}
+  {{ area.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Shop Closure' 'timeslots:area_close_block_of_timeslots' area_id=area.id %}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <h3>Close or Open a Block of Timeslots</h3>
+    <div class="card border-danger">
+      <div class="card-header text-white bg-danger">Timeslot Status</div>
+      <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form | crispy }}
+        <div class="form-group">
+          <input type="submit" value="Submit" class="btn btn-primary">
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5 offset-md-1 mb-4">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">About Closing Timeslots</h4>
+      <p>
+        As an area manager, you have the authority to close your shop during
+        as many timeslots as you would like. Such power!
+      </p>
+      <p>
+        During a closed timeslot, it is not possible for members to reserve
+        time in your shop, and any existing reservations will be canceled.
+        Clubhouse will automatically email the affected members, informing
+        them of the cancelation.
+      </p>
+      <p>
+        You can re-open a canceled timeslot any time you like, but it is not
+        possible to restore any reservations you canceled when you first closed
+        it.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{{ form.media }}
+{% endblock %}
