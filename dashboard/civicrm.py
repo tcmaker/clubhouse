@@ -176,7 +176,7 @@ def signup_add_keyfob_code(contact_id, keyfob_code):
     properties = {
         'contact_id': contact_id,
         'code': keyfob_code,
-        'access_level': 1,
+        'access_level': 2,
     }
 
     return _extract_value_after_create(civicrm_query(
