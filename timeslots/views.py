@@ -135,7 +135,7 @@ def reservation_form(request, area_id, slug):
 
             reservation.save()
             messages.success(request, 'Your reservation is good to go')
-            return HttpResponseRedirect("/timeslots/")
+            return HttpResponseRedirect("/timeslots/" + str(area.id) + '/')
 
     else:
         form = ReservationForm()
