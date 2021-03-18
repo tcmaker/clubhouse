@@ -91,7 +91,7 @@ def get_timeslots_for_range(area, start_time, end_time):
                 timeslot['end'].strftime(SLUG_STRFTIME_FORMAT),
             ])
 
-        if timeslot['start'].replace(tzinfo=tz) < now:
+        if timeslot['end'].replace(tzinfo=tz) < now:
             timeslot['rendering'] = 'background'
             timeslot['className'] = 'timeslots-timeslot-past'
             if 'title' in timeslot: del timeslot['title']

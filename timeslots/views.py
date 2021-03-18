@@ -105,7 +105,7 @@ def timeslot_detail(request, area_id, slug):
         'area': area,
         'timeslot': get_or_create_timeslot(slug),
         'show_manager_options': request.user.id == area.area_manager.id,
-        'timeslot_has_passed': timeslot.start_time < tz_now()
+        'timeslot_has_passed': timeslot.end_time < tz_now()
     })
 
 @login_required
@@ -115,6 +115,8 @@ def reservation_form(request, area_id, slug):
     timeslot = get_or_create_timeslot(slug)
 
     if timeslot.end_time < tz_now():
+        print(str(timeslot.end_time))
+        print(str(tz_now()))
         messages.error(request, 'You cannot reserve a timeslot in the past.')
         return HttpResponseRedirect('/timeslots/')
 
