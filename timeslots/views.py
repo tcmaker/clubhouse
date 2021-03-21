@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect
 from workshop.models import Area
 from django.utils.dateparse import parse_datetime
 from datetime import date, datetime
-from .utils import get_timeslots_for_range, get_or_create_timeslot
-from .forms import ReservationForm, CancelReservationForm, TimeslotForm
+from .utils import get_timeslots_for_range, get_or_create_timeslot, close_area_by_date_range, open_area_by_date_range
+from .forms import ReservationForm, CancelReservationForm, TimeslotForm, CloseTimeslotRangeForm
 from .models import Reservation
 from django.contrib import messages
 from django.core.exceptions import ValidationError
@@ -61,6 +61,31 @@ def close_timeslot(request, area_id, slug):
         'form': form
     })
 
+@login_required
+@membership_required
+def area_close_block_of_timeslots(request, area_id):
+    area = Area.objects.get(pk=area_id)
+
+    # HACK: do it right with roles, etc
+    if request.user.id != area.area_manager.id:
+        messages.error(request, 'Only the %s manager can do that' % area.name)
+        return redirect('/timeslots')
+
+    if request.method == 'POST':
+        form = CloseTimeslotRangeForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['desired_state'] == 'open':
+                open_area_by_date_range(area, form.cleaned_data['start_time'], form.cleaned_data['end_time'])
+            else:
+                close_area_by_date_range(area, form.cleaned_data['start_time'], form.cleaned_data['end_time'])
+            return HttpResponseRedirect('/timeslots/' + str(area.id))
+    else:
+        form = CloseTimeslotRangeForm()
+
+    return render(request, 'timeslots/area_close_block_of_timeslots.html', {
+        'area': area,
+        'form': form,
+    })
 
 @login_required
 @membership_required
@@ -80,7 +105,7 @@ def timeslot_detail(request, area_id, slug):
         'area': area,
         'timeslot': get_or_create_timeslot(slug),
         'show_manager_options': request.user.id == area.area_manager.id,
-        'timeslot_has_passed': timeslot.start_time < tz_now()
+        'timeslot_has_passed': timeslot.end_time < tz_now()
     })
 
 @login_required
@@ -90,6 +115,8 @@ def reservation_form(request, area_id, slug):
     timeslot = get_or_create_timeslot(slug)
 
     if timeslot.end_time < tz_now():
+        print(str(timeslot.end_time))
+        print(str(tz_now()))
         messages.error(request, 'You cannot reserve a timeslot in the past.')
         return HttpResponseRedirect('/timeslots/')
 
@@ -108,7 +135,7 @@ def reservation_form(request, area_id, slug):
 
             reservation.save()
             messages.success(request, 'Your reservation is good to go')
-            return HttpResponseRedirect("/timeslots/")
+            return HttpResponseRedirect("/timeslots/" + str(area.id) + '/')
 
     else:
         form = ReservationForm()

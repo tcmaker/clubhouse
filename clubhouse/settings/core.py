@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'localflavor',
     'mozilla_django_oidc',
     'phonenumber_field',
+    'tempus_dominus',
 
     # Mine
     'accounts.apps.AccountsConfig',
@@ -106,8 +107,21 @@ CSP_SCRIPT_SRC = (
     'code.jquery.com',
     'js.stripe.com',
     'stackpath.bootstrapcdn.com',
+    'cdnjs.cloudflare.com',
 )
 
+CSP_STYLE_SRC = (
+    "'self'",
+    'cdnjs.cloudflare.com',
+    'fonts.googleapis.com',
+)
+
+CSP_FONT_SRC = (
+    "'self'",
+    "data:",
+    'fonts.googleapis.com',
+    'fonts.gstatic.com',
+)
 
 LOGGING = {
     'version': 1,

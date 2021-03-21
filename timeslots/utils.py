@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 from calendar import HTMLCalendar
-from .models import Timeslot, SLUG_STRFTIME_FORMAT, LENGTH_OF_TIMESLOT
+from .models import Reservation, Timeslot, SLUG_STRFTIME_FORMAT, LENGTH_OF_TIMESLOT
 from workshop.models import Area
 from collections import deque
 from django.utils.timezone import now as tz_now
@@ -16,15 +16,33 @@ def datetimes_are_equal(left, right):
         return True
     return False
 
-def activate_riot_mode(start_time, end_time):
-    for area in Area.objects.all():
+def close_area_by_date_range(area, start_time, end_time):
         json = get_timeslots_for_range(area, start_time, end_time)
+        timeslots = []
         for json_object in json:
             timeslot = get_or_create_timeslot(json_object['id'])
-            print(timeslot.humanize(include_date=True, include_area=True))
             timeslot.is_closed_by_staff = True
             timeslot.save()
             timeslot.cancel_reservations(True)
+            timeslots.append(timeslot)
+        return timeslots
+
+def open_area_by_date_range(area, start_time, end_time):
+    json = get_timeslots_for_range(area, start_time, end_time)
+    timeslots = []
+    for json_object in json:
+        timeslot = get_or_create_timeslot(json_object['id'])
+        timeslot.is_closed_by_staff = False
+        timeslot.save()
+        timeslots.append(timeslots)
+    return timeslots
+
+def activate_riot_mode(start_time, end_time):
+    for area in Area.objects.all():
+        timeslots = close_area_by_date_range(area, start_time, end_time)
+        for timeslot in timeslots:
+            print(timeslot.humanize(include_date=True, include_area=True))
+
 
 def get_timeslots_for_range(area, start_time, end_time):
     models = deque(area.timeslot_set.filter(start_time__gte=start_time, end_time__lte=end_time).order_by('start_time').all())
@@ -73,7 +91,7 @@ def get_timeslots_for_range(area, start_time, end_time):
                 timeslot['end'].strftime(SLUG_STRFTIME_FORMAT),
             ])
 
-        if timeslot['start'].replace(tzinfo=tz) < now:
+        if timeslot['end'].replace(tzinfo=tz) < now:
             timeslot['rendering'] = 'background'
             timeslot['className'] = 'timeslots-timeslot-past'
             if 'title' in timeslot: del timeslot['title']
@@ -120,3 +138,28 @@ def get_or_create_timeslot(slug):
             start_time = datetime.strptime(parts[1], SLUG_STRFTIME_FORMAT),
             end_time = datetime.strptime(parts[2], SLUG_STRFTIME_FORMAT)
         )
+
+def migrate_to_one_hour_slots():
+    three_hours_in_seconds = 3 * 60 * 60
+    for r in Reservation.objects.all():
+        if (r.timeslot.end_time - r.timeslot.start_time).seconds == three_hours_in_seconds:
+            base_start_time = r.timeslot.start_time
+            base_end_time = r.timeslot.start_time + timedelta(hours=1)
+            for offset in range(0,3):
+                start = base_start_time + timedelta(hours=offset)
+                end = base_end_time + timedelta(hours=offset)
+                slug = [
+                    str(r.timeslot.area.id),
+                    start.strftime(SLUG_STRFTIME_FORMAT),
+                    end.strftime(SLUG_STRFTIME_FORMAT)
+                ]
+                slug = '-'.join(slug)
+                new_timeslot = get_or_create_timeslot(slug)
+                new_reservation = Reservation()
+                new_reservation.timeslot = new_timeslot
+                new_reservation.member = r.member
+                new_reservation.save()
+            r.delete()
+    for ts in Timeslot.objects.all():
+        if (ts.end_time - ts.start_time).seconds == three_hours_in_seconds:
+            ts.delete()

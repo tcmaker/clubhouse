@@ -12,9 +12,11 @@ SLUG_STRFTIME_FORMAT = "%Y%m%d%H%M"
 HUMANIZED_TIME_FORMAT = "%-I:%M %p"
 HUMANIZED_DATE_FORMAT = "%h %d, %Y"
 
-LENGTH_OF_TIMESLOT = 3
+ENFORCE_MAX_CAPACITY=False
 
-MEMBER_MAX_DAILY_TIMESLOTS = 1
+LENGTH_OF_TIMESLOT = 1
+
+MEMBER_MAX_DAILY_TIMESLOTS = 4
 
 CANCEL_RESERVATION_TEXT = '''%s,
 
@@ -120,6 +122,8 @@ class Reservation(models.Model):
         return self.timeslot.humanize(include_date=True, include_area=False)
 
     def __timeslot_is_available(self):
+        if not ENFORCE_MAX_CAPACITY:
+            return True
         area_max_capacity = self.timeslot.area.covid19_capacity
         reserved_capacity = self.timeslot.reservation_set.count()
         # import code; code.interact(local=dict(globals(), **locals()))
@@ -135,9 +139,12 @@ class Reservation(models.Model):
             timeslot__area__is_exempt_from_member_timeslot_quota=False
         )
         total = total.filter(member_id=self.member.id).count()
-        return total < 1
+        return total < MEMBER_MAX_DAILY_TIMESLOTS
 
         return MEMBER_MAX_DAILY_TIMESLOTS > total
+
+    def __member_is_attempting_to_double_book(self):
+        pass
 
     def clean(self):
         if not self.__member_has_open_reservations():
