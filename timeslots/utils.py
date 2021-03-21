@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 from calendar import HTMLCalendar
-from .models import Timeslot, SLUG_STRFTIME_FORMAT, LENGTH_OF_TIMESLOT
+from .models import Reservation, Timeslot, SLUG_STRFTIME_FORMAT, LENGTH_OF_TIMESLOT
 from workshop.models import Area
 from collections import deque
 from django.utils.timezone import now as tz_now
@@ -138,3 +138,28 @@ def get_or_create_timeslot(slug):
             start_time = datetime.strptime(parts[1], SLUG_STRFTIME_FORMAT),
             end_time = datetime.strptime(parts[2], SLUG_STRFTIME_FORMAT)
         )
+
+def migrate_to_one_hour_slots():
+    three_hours_in_seconds = 3 * 60 * 60
+    for r in Reservation.objects.all():
+        if (r.timeslot.end_time - r.timeslot.start_time).seconds == three_hours_in_seconds:
+            base_start_time = r.timeslot.start_time
+            base_end_time = r.timeslot.start_time + timedelta(hours=1)
+            for offset in range(0,3):
+                start = base_start_time + timedelta(hours=offset)
+                end = base_end_time + timedelta(hours=offset)
+                slug = [
+                    str(r.timeslot.area.id),
+                    start.strftime(SLUG_STRFTIME_FORMAT),
+                    end.strftime(SLUG_STRFTIME_FORMAT)
+                ]
+                slug = '-'.join(slug)
+                new_timeslot = get_or_create_timeslot(slug)
+                new_reservation = Reservation()
+                new_reservation.timeslot = new_timeslot
+                new_reservation.member = r.member
+                new_reservation.save()
+            r.delete()
+    for ts in Timeslot.objects.all():
+        if (ts.end_time - ts.start_time).seconds == three_hours_in_seconds:
+            ts.delete()
