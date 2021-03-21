@@ -276,16 +276,24 @@
         },
         "faker": {
             "hashes": [
-                "sha256:14e23b25d00168f09b2cf8182a17d1fe615ab26666f564248b34ef04f060bd42",
-                "sha256:8814597d2c9d02824d2590e282ea0c57d1f302ae4f91e85ace0b7e710bd628a5"
+                "sha256:60a7263104ef7a14ecfe2af1142d53924aa534ccec85cea82bb67b2b32f84421",
+                "sha256:f43ac743c34affb1c7fccca8b06450371cd482b6ddcb4110e420acb24356e70b"
             ],
-            "version": "==6.6.1"
+            "version": "==6.6.2"
         },
         "future": {
             "hashes": [
                 "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"
             ],
             "version": "==0.18.2"
+        },
+        "futures": {
+            "hashes": [
+                "sha256:3a44f286998ae64f0cc083682fcfec16c406134a81a589a5de445d7bb7c2751b",
+                "sha256:51ecb45f0add83c806c68e4b06106f90db260585b25ef2abfcda0bd95c0132fd",
+                "sha256:c4884a65654a7c45435063e14ae85280eb1f111d94e542396717ba9828c4337f"
+            ],
+            "version": "==3.1.1"
         },
         "gunicorn": {
             "hashes": [
@@ -436,10 +444,10 @@
         },
         "s3transfer": {
             "hashes": [
-                "sha256:1e28620e5b444652ed752cf87c7e0cb15b0e578972568c6609f0f18212f259ed",
-                "sha256:7fdddb4f22275cf1d32129e21f056337fd2a80b6ccef1664528145b72c49e6d2"
+                "sha256:2db91129803fa023bc71c16d106acac52c43409477a777910ae61a8279b4ee73",
+                "sha256:59867fd9482a3e2cf3179051b5a3e03051c78047c967e89d57a3ec41b058a980"
             ],
-            "version": "==0.3.4"
+            "version": "==0.3.5"
         },
         "six": {
             "hashes": [
