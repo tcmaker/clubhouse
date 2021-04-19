@@ -11,8 +11,10 @@ import boto3, os, re, uuid
 from botocore.exceptions import ParamValidationError
 from django.utils.timezone import now as tz_now
 from datetime import timedelta, datetime
+from uuid import uuid4
 
 from .civicrm import get_member_info, get_membership_status
+from dashboard.civicrm import profile_update_email
 
 class ClubhouseUserManager(UserManager):
     def _sterilize_for_username(self, s):
@@ -56,6 +58,8 @@ class User(AbstractUser):
     sub = models.CharField('oidc identifier', max_length=100, unique=True, null=True, blank=True)
     civicrm_membership_status = models.CharField("membership status in civicrm", max_length=30, null=True, blank=True)
     civicrm_keyfob_code = models.CharField('keyfob code from civicrm', max_length=30, null=True, blank=True)
+    pending_email = models.EmailField('unverified email address', null=True, blank=True)
+    pending_email_verification_code = models.UUIDField(null=True, blank=True)
 
     objects = ClubhouseUserManager()
 
@@ -72,11 +76,50 @@ class User(AbstractUser):
 
         return False
 
-    #### Cognito ####
+    def set_pending_email_and_verify(self, email_address):
+        self.pending_email = email_address
+        self.pending_email_verification_code = uuid4()
+        self.save()
 
+        context = {
+            'member': self,
+            'hostname': settings.WEBAPP_URL_BASE
+        }
+        msg_html = render_to_string('email/verify_pending_email.html', context)
+        msg = EmailMessage(subject='Twin Cities Maker: Verify Your Email', body=msg_html, to=[self.pending_email])
+        msg.content_subtype = "html"  # Main content is now text/html
+        print("about to send message")
+        print(msg.send())
+        print("just sent message")
+
+    def verify_pending_email_address(self):
+        """It's on you to actually make sure this checks out."""
+        self.email = self.pending_email
+        self.pending_email = None
+        self.pending_email_verification_code = None
+        self.save()
+        self.update_civicrm_with_email()
+        self.sync_cognito_user_attributes()
+
+    #### Cognito ####
     @property
     def __cognito_client(self):
         return boto3.client('cognito-idp', region_name=os.environ.get('AWS_DEFAULT_REGION'))
+
+    def sync_cognito_user_attributes(self):
+        user_attributes =[
+            {'Name': 'email', 'Value': self.email},
+            {'Name': 'family_name', 'Value': self.last_name},
+            {'Name': 'given_name', 'Value': self.first_name},
+            {'Name': 'email_verified', 'Value': 'True'},
+        ]
+
+        response = self.__cognito_client.admin_update_user_attributes(
+            UserPoolId = settings.COGNITO_USER_POOL_ID,
+            Username=self.username,
+            UserAttributes = user_attributes
+        )
+        return response
 
     def change_cognito_password(self, new_password, is_temporary=False):
         try:
@@ -163,6 +206,7 @@ class User(AbstractUser):
 
         return (response, self.change_cognito_password(password))
 
+    ### CiviCRM ###
     def sync_membership_status(self):
         if not self.civicrm_identifier: return
         self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
@@ -180,6 +224,9 @@ class User(AbstractUser):
             self.civicrm_keyfob_code = info['keyfob']
         self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
         self.save()
+
+    def update_civicrm_with_email(self):
+        profile_update_email(self.civicrm_identifier, self.email)
 
 def two_weeks_from_now():
     return tz_now() + timedelta(days=14)

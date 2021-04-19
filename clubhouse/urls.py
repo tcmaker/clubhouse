@@ -28,6 +28,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('approvals/', include('approvals.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('profile/', include('member_profile.urls')),
     path('renew/', include('renew.urls')),
     path('signup/', include('signup.urls')),
     path('timeslots/', include('timeslots.urls')),
