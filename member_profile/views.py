@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect
 from .forms import BasicInfoForm, AddressForm, PhoneForm, EmergencyContactForm
 
+from accounts.auth.decorators import membership_required
+from django.contrib.auth.decorators import login_required
+
 from dashboard import civicrm
 
+@login_required
+@membership_required
 def index(request):
     address = civicrm.profile_get_address(request.user.civicrm_identifier)
     phone = civicrm.profile_get_phone(request.user.civicrm_identifier)
@@ -24,9 +29,13 @@ def index(request):
         'emergency_contact_info': emergency_contact_info
     })
 
+@login_required
+@membership_required
 def email_confirm_notice(request):
     return render(request, 'member_profile/email_confirm_notice.html', context={})
 
+@login_required
+@membership_required
 def basic_info_form(request):
     if request.method == 'POST':
         form = BasicInfoForm(request.POST)
@@ -56,6 +65,8 @@ def basic_info_form(request):
         'form': form
     })
 
+@login_required
+@membership_required
 def address_form(request):
     address_record = civicrm.profile_get_address(request.user.civicrm_identifier)
 
@@ -98,6 +109,8 @@ def address_form(request):
         'form': form
     })
 
+@login_required
+@membership_required
 def phone_form(request):
     phone = civicrm.profile_get_phone(request.user.civicrm_identifier)
     print(phone)
@@ -124,6 +137,8 @@ def phone_form(request):
         'form': form
     })
 
+@login_required
+@membership_required
 def emergency_contact_form(request):
     if request.method == 'POST':
         form = EmergencyContactForm(request.POST)
