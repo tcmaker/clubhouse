@@ -57,6 +57,7 @@
       <li class="nav-item dropdown">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ request.user }}</a>
         <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="{% url 'profile:index' %}">Your Profile</a>
           <a class="dropdown-item" href="{% url 'accounts:change_password' %}">Change Password</a>
           <hr class="dropdown-divider">
           <a class="dropdown-item" href="{% url 'accounts:signout' %}">Logout</a>

@@ -14,4 +14,7 @@ urlpatterns = [
     path('onboard/', views.onboarding.accept, name="accept_invite"),
     path('onboard/password/', views.onboarding.set_password, name="set_password"),
     path('onboard/instructions/', views.onboarding.instructions, name="instructions"),
+
+    # Email Verification
+    path('verify_email/', views.verify_email_with_code, name="verify_email_with_code"),
 ]

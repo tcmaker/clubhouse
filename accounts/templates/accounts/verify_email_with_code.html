@@ -1,0 +1,25 @@
+{% extends 'signup/base.html' %}
+
+{% block title %}Email Confirmation Notice{% endblock %}
+
+{% block header_text %}Confirm Your Email Address{% endblock %}
+
+{% block content %}
+  {% if success %}
+    <p>
+      Your email is verified, and your new email is ready for use.
+    </p>
+
+    <a href="/" class="btn btn-lg btn-primary">OK</a>
+
+  {% else %}
+    <h4>Oops!</h4>
+
+    <p>The confirmation code is missing or invalid. Contact
+      <a href="mailto:membership@tcmaker.org">membership@tcmaker.org</a>
+      and we'll take care of it.
+    </p>
+
+    <a href="https://tcmaker.org/" class="btn btn-lg btn-primary">OK</a>
+  {% endif %}
+{% endblock %}

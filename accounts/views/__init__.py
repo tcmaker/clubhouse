@@ -20,6 +20,28 @@ import os, datetime
 
 from django.conf import settings
 
+def verify_email_with_code(request):
+    if 'code' not in request.GET:
+        return render(request, 'accounts/verify_email_with_code.html', context={
+            'success': False,
+        })
+    try:
+        record = User.objects.get(pending_email_verification_code=request.GET['code'])
+
+        print(record)
+
+        # It worked.
+        record.verify_pending_email_address()
+        success = True
+
+    except:
+        success = False
+
+    return render(request, 'accounts/verify_email_with_code.html', context={
+        'success': success,
+    })
+
+
 class OIDCLogoutView(MozillaLogoutView):
     def get(self, request):
         # import code; code.interact(local=dict(globals(), **locals()))

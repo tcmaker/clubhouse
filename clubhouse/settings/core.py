@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'approvals.apps.ApprovalsConfig',
     'dashboard.apps.DashboardConfig',
     'landing.apps.LandingConfig',
+    'member_profile.apps.MemberProfileConfig',
     'renew.apps.RenewConfig',
     'signup.apps.SignupConfig',
     'storage.apps.StorageConfig',

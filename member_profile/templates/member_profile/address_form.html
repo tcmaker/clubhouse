@@ -1,0 +1,27 @@
+{% extends 'member_profile/index.html' %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block heading %}
+  Update Basic Info
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Update Address' 'profile:basic_info_form' %}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form | crispy }}
+      <div class="form-group">
+        <input type="submit" value="Update" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

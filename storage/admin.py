@@ -9,8 +9,8 @@ class CubbyAdmin(admin.ModelAdmin):
 
     list_filter = ['aisle', 'assignee__civicrm_membership_status']
 
-    def get_ordering(self, request):
-        return ['int_identifier']
+    # def get_ordering(self, request):
+    #     return ['identifier']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

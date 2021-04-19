@@ -17,6 +17,8 @@ def civicrm_query(*, entity, method, action, options):
     }
     params = {**params, **options}
 
+    print(params)
+
     if method == 'POST':
         func = requests.post
     else:
@@ -199,3 +201,186 @@ def signup_add_current_membership(contact_id):
         action = 'create',
         options = properties
     ))
+
+#### Self-Service Profile Updates ####
+def profile_get_emergency_contact_name(contact_id):
+    properties = {
+        'id': contact_id,
+        'return': settings.CIVICRM_FIELD_EMERGENCY_CONTACT_NAME,
+    }
+    resp = civicrm_query(
+        entity = 'Contact',
+        method = 'GET',
+        action = 'getvalue',
+        options = properties
+    )
+    if resp.json()['result']:
+        return resp.json()['result']
+    else:
+        return None
+
+def profile_get_emergency_contact_phone(contact_id):
+    properties = {
+        'id': contact_id,
+        'return': settings.CIVICRM_FIELD_EMERGENCY_CONTACT_PHONE,
+    }
+    resp = civicrm_query(
+        entity = 'Contact',
+        method = 'GET',
+        action = 'getvalue',
+        options = properties
+    )
+    if resp.json()['result']:
+        return resp.json()['result']
+    else:
+        return None
+
+def profile_update_emergency_contact(contact_id, emergency_contact_name, emergency_contact_phone):
+    contact = civicrm_get(entity='Contact', id=contact_id, options={})
+    contact[settings.CIVICRM_FIELD_EMERGENCY_CONTACT_NAME] = emergency_contact_name
+    contact[settings.CIVICRM_FIELD_EMERGENCY_CONTACT_PHONE] = str(emergency_contact_phone)
+    print(contact)
+    return signup_create_contact(contact)
+
+
+def profile_get_contact(contact_id):
+    return_emergency_contact_name_param = 'return.' + settings.CIVICRM_FIELD_EMERGENCY_CONTACT_NAME
+    return_emergency_contact_phone_param = 'return.' + settings.CIVICRM_FIELD_EMERGENCY_CONTACT_PHONE
+    properties = {
+        'contact_id': contact_id,
+        # return_emergency_contact_name_param: 1,
+        # return_emergency_contact_phone_param: 1,
+    }
+    return civicrm_query(
+        entity = 'Contact',
+        method = 'GET',
+        action = 'getvalue',
+        options = properties
+    )
+
+def profile_update_name(contact_id, first_name, last_name):
+    properties = {
+        'contact_id': contact_id,
+        'last_name': last_name,
+        'first_name': first_name,
+    }
+    return _extract_value_after_create(civicrm_query(
+        entity = 'Contact',
+        method = 'POST',
+        action = 'create',
+        options = properties
+    ))
+
+def profile_update_email(contact_id, new_email):
+    # Get old Email Address
+    properties = {
+        'contact_id': contact_id,
+        'is_primary': 1,
+    }
+
+    email_record = _extract_value_after_create(civicrm_query(
+        entity='Email',
+        method='GET',
+        action='get',
+        options=properties
+    ))
+
+    properties['id'] = email_record['id']
+    properties['email'] = new_email
+
+    return _extract_value_after_create(civicrm_query(
+        entity='Email',
+        method='POST',
+        action='create',
+        options=properties
+    ))
+
+def profile_get_address(contact_id):
+    properties = {
+        'contact_id': contact_id,
+        'is_primary': 1,
+    }
+
+    return _extract_value_after_create(civicrm_query(
+        entity='Address',
+        method='GET',
+        action='get',
+        options=properties
+    ))
+
+def profile_get_state_province(state_id):
+    properties = {}
+    # def civicrm_get(*, entity, id, options):
+    return civicrm_get(entity='StateProvince', id=state_id, options=properties)
+
+
+def profile_get_phone(contact_id):
+    properties = {
+        'contact_id': contact_id,
+        'is_primary': 1,
+    }
+    return _extract_value_after_create(civicrm_query(
+        entity='Phone',
+        method='GET',
+        action='get',
+        options=properties
+    ))
+
+def profile_update_phone(contact_id, phone_id, phone, can_receive_sms):
+    if can_receive_sms:
+        phone_type = 'Mobile'
+    else:
+        phone_type = 'Phone'
+
+    properties = {
+        'id': phone_id,
+        'contact_id': contact_id,
+        'is_primary': 1,
+        'location_type_id': 'Main',
+        'phone_type_id': phone_type,
+        'phone': str(phone),
+    }
+
+    return _extract_value_after_create(civicrm_query(
+        entity = 'Phone',
+        method = 'POST',
+        action = 'create',
+        options = properties
+    ))
+
+def profile_update_address(contact_id, address_id, properties):
+    '''
+        properties should look like:
+
+        {
+            'street_address': "123 Sesame Street",
+            'supplemental_address_1': "optional second line for street address",
+            'city': 'Minneapolis',
+            'state_province_id': 'Minnesota',
+            'postal_code': '55406',
+        }
+    '''
+
+    print(properties)
+
+    default_options = {
+        'contact_id': contact_id,
+        'id': address_id,
+        'location_type': 'Main',
+        'is_primary': 1,
+    }
+
+    properties = {**default_options, **properties}
+
+    if 'state_province_id' not in properties:
+        properties['state_province_id'] = 'MN'
+
+    properties['state_province_id'] = _expand_state_id(properties['state_province_id'])
+
+    r = civicrm_query(
+        entity='Address',
+        method='POST',
+        action='create',
+        options=properties
+    )
+    return _extract_value_after_create(r)
