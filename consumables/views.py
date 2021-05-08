@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Product
@@ -8,6 +9,7 @@ from .forms import HourlyForm
 import stripe
 import json
 
+@login_required
 def product_list(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     products = Product.objects.all()
@@ -16,6 +18,7 @@ def product_list(request):
         'products': products
     })
 
+@login_required
 def product_detail(request, product_id):
     product = Product.objects.get(pk=product_id)
 
@@ -30,6 +33,7 @@ def product_detail(request, product_id):
         'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
     })
 
+@login_required
 def generate_stripe_session(request, product_id):
     product = Product.objects.get(pk=product_id)
     request_payload = request.POST
