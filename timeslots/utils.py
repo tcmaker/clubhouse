@@ -34,12 +34,19 @@ def open_area_by_date_range(area, start_time, end_time):
         timeslot = get_or_create_timeslot(json_object['id'])
         timeslot.is_closed_by_staff = False
         timeslot.save()
-        timeslots.append(timeslots)
+        timeslots.append(timeslot)
     return timeslots
 
 def activate_riot_mode(start_time, end_time):
     for area in Area.objects.all():
         timeslots = close_area_by_date_range(area, start_time, end_time)
+        for timeslot in timeslots:
+            print(timeslot.humanize(include_date=True, include_area=True))
+
+
+def deactivate_riot_mode(start_time, end_time):
+    for area in Area.objects.all():
+        timeslots = open_area_by_date_range(area, start_time, end_time)
         for timeslot in timeslots:
             print(timeslot.humanize(include_date=True, include_area=True))
 
