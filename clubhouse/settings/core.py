@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     # Mine
     'accounts.apps.AccountsConfig',
     'approvals.apps.ApprovalsConfig',
+    'consumables.apps.ConsumablesConfig',
     'dashboard.apps.DashboardConfig',
     'landing.apps.LandingConfig',
     'member_profile.apps.MemberProfileConfig',
@@ -97,6 +98,7 @@ CSP_DEFAULT_SRC = (
     'fonts.googleapis.com',
     'js.stripe.com',
     'fonts.gstatic.com',
+    'tcmaker-clubhouse-uploads-prod.s3.amazonaws.com',
 )
 
 CSP_CONNECT_SRC = ("'self'", 'api.stripe.com',)
@@ -115,6 +117,7 @@ CSP_STYLE_SRC = (
     "'self'",
     'cdnjs.cloudflare.com',
     'fonts.googleapis.com',
+    "'unsafe-inline'",
 )
 
 CSP_FONT_SRC = (
@@ -137,3 +140,5 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

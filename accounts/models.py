@@ -60,6 +60,7 @@ class User(AbstractUser):
     civicrm_keyfob_code = models.CharField('keyfob code from civicrm', max_length=30, null=True, blank=True)
     pending_email = models.EmailField('unverified email address', null=True, blank=True)
     pending_email_verification_code = models.UUIDField(null=True, blank=True)
+    stripe_customer_identifier = models.CharField('Stripe customer identifier', max_length=100, null=True, blank=True)
 
     objects = ClubhouseUserManager()
 
