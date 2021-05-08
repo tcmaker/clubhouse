@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('landing.urls')),
     path('accounts/', include('accounts.urls')),
     path('approvals/', include('approvals.urls')),
+    path('consumables/', include('consumables.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('profile/', include('member_profile.urls')),
     path('renew/', include('renew.urls')),
