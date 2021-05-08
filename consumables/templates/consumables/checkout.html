@@ -1,0 +1,33 @@
+{% extends 'consumables/product_list.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb product.name 'consumables:product_detail' %}
+{% endblock %}
+
+{% block heading %}
+  Checkout
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+  <p>There is something wrong with your web browser, and we don't know what
+    it is. You haven't been charged anything, so just try again.</p>
+
+    {{ stripe_session }}
+
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    var stripeSessionObject = {{ stripe_session|safe }};
+    console.log(stripeSessionObject);
+    var stripe = Stripe("{{ stripe_publishable_key|safe }}");
+    stripe.redirectToCheckout({ sessionId: stripeSessionObject.id });
+  </script>
+
+{% endblock %}
