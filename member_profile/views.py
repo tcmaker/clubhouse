@@ -10,7 +10,12 @@ from dashboard import civicrm
 @membership_required
 def index(request):
     address = civicrm.profile_get_address(request.user.civicrm_identifier)
-    phone = civicrm.profile_get_phone(request.user.civicrm_identifier)
+
+    try:
+        phone = civicrm.profile_get_phone(request.user.civicrm_identifier)
+    except:
+        phone = None
+
     if 'state_province_id' in address:
         state_province = civicrm.profile_get_state_province(address['state_province_id'])
         state_province_abbreviation = state_province['abbreviation']
@@ -112,8 +117,13 @@ def address_form(request):
 @login_required
 @membership_required
 def phone_form(request):
-    phone = civicrm.profile_get_phone(request.user.civicrm_identifier)
-    print(phone)
+    try:
+        phone = civicrm.profile_get_phone(request.user.civicrm_identifier)
+    except:
+        phone = {
+            'phone': None,
+            'phone_type_id': 1,
+        }
 
     if request.method == 'POST':
         form = PhoneForm(request.POST)

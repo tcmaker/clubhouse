@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # Libraries
     'compressor',
     'crispy_forms',
+    'crispy_bootstrap5',
     'django_bootstrap_breadcrumbs',
     'django_extensions',
     'sslserver', # self-signed ssl dev server for testing with cognito
@@ -110,6 +111,7 @@ CSP_SCRIPT_SRC = (
     'code.jquery.com',
     'js.stripe.com',
     'stackpath.bootstrapcdn.com',
+    'cdn.jsdelivr.net',
     'cdnjs.cloudflare.com',
 )
 
