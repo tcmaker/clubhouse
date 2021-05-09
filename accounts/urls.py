@@ -2,12 +2,15 @@ from django.urls import path
 from . import views
 from .views import onboarding
 
+from mozilla_django_oidc.views import OIDCAuthenticationRequestView
+
 app_name = 'accounts'
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('signout', views.OIDCLogoutView.as_view(), name='signout'),
-    path('login/', views.login, name="login"),
+    # path('login/', views.login, name="login"),
+    path('login/', OIDCAuthenticationRequestView.as_view(), name='login'),
     path('password/', views.change_password, name="change_password"),
 
     # Onboarding
