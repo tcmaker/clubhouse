@@ -1,0 +1,31 @@
+{% extends 'dashboard/index.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+
+{% block title %}Departments{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Departments' 'workshop:department_list' %}
+{% endblock %}
+
+{% block heading %}
+  Departments
+{% endblock %}
+
+{% block content %}
+<div class="row row-cols-md-3 row-cols-1">
+  {% for department in departments %}
+    <div class="col">
+      <div href="{{ department.get_absolute_url }}" class="card mb-4">
+        <img src="{{ department.photo.url }}" class="card-img-top" alt="Photo of {{ department }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ department }}</h5>
+
+          <a class="btn btn-primary" href="{{ department.get_absolute_url }}">More Info</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

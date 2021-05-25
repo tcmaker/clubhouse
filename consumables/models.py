@@ -27,3 +27,7 @@ class Product(models.Model):
         stripe.api_key = settings.STRIPE_SECRET_KEY
         prices = stripe.Price.list(product=self.stripe_product_identifier)
         return prices.data[0].unit_amount / 100.0
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('consumables:product_detail', args=[str(self.id)])
