@@ -33,6 +33,7 @@ urlpatterns = [
     path('renew/', include('renew.urls')),
     path('signup/', include('signup.urls')),
     path('timeslots/', include('timeslots.urls')),
+    path('workshop/', include('workshop.urls')),
 
     # Documentation for the project
     path('admin/doc/', include('django.contrib.admindocs.urls')),

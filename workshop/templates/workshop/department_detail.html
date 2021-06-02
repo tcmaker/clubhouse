@@ -1,0 +1,88 @@
+{% extends 'workshop/department_list.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+
+{% block title %}{{ department.name }}{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb department.name 'workshop:department_detail' department_id=department.slug %}
+{% endblock %}
+
+{% block heading %}{{ department.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-7">
+    <div class="card mb-4">
+      <div class="card-header">{{ department }} Map</div>
+      <div class="card-body">
+        <img src="{{ department.map.url }}" alt="Map of the department" />
+      </div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Shop Details</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <strong>Area Managers:</strong> {{ department.all_area_managers|join:", " }}
+        </li>
+        <li class="list-group-item">
+          <strong>Contact Email:</strong>
+          <a href="mailto:{{ department.shop_contact_email }}">{{ department.shop_contact_email }}</a>
+        </li>
+      </ul>
+      <div class="card-body">
+        <a href="donate/" class="btn btn-primary">Donate to {{ department }}</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5 mb-4">
+    {% if department.training_tier == 'NONE' %}
+      <div class="card border-info">
+        <div class="card-header text-white bg-info">Training Requirements</div>
+        <div class="card-body">
+          <h5 class="card-title">No Special Training Required</h5>
+          <p>
+            If you are unfamiliar with a tool, contact the area manager for training.
+          </p>
+        </div>
+      </div>
+    {% elif department.training_tier == 'SOME' %}
+      <div class="card border-info">
+        <div class="card-header text-white bg-info">Training Requirements</div>
+        <div class="card-body">
+          <h5 class="card-title">Some Training Required</h5>
+          <p>
+            <a href="https://wiki.tcmaker.org/shop_departments">Consult the Wiki</a>
+            for a list of tools that require training.
+          </p>
+        </div>
+      </div>
+  {% elif department.training_tier == 'PER_TOOL' %}
+    <div class="card border-warning">
+      <div class="card-header text-white bg-warning">Training Requirements</div>
+      <div class="card-body">
+        <h5 class="card-title">Training is Mandatory</h5>
+        <p>
+          You must demonstrate proficiency to use any tool in this department.
+        </p>
+      </div>
+    </div>
+  {% elif department.training_tier == 'ORIENTATION_REQUIRED' %}
+  <div class="card border-warning">
+    <div class="card-header text-white bg-warning">Training Requirements</div>
+    <div class="card-body">
+      <h5 class="card-title">Training is Mandatory</h5>
+      <p>
+        You must attend an orientation session before using any of the tools
+        in this department. Check <a href="https://go.tcmaker.org/classes">our
+        class schedule</a> for available dates.
+      </p>
+    </div>
+  </div>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}
