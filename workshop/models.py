@@ -13,7 +13,7 @@ class Department(models.Model):
     name = models.CharField('Department Name', max_length=50, null=False, blank=False)
     slug = models.SlugField('URL Slug', max_length=50, null=False, blank=False)
     area_manager = models.ForeignKey(User, related_name='department_area_manager', on_delete=models.SET_NULL, blank=True, null=True)
-    secondary_area_managers = models.ManyToManyField(User)
+    secondary_area_managers = models.ManyToManyField(User, blank=True)
     shop_contact_email = models.EmailField(max_length=50, null=True, blank=True)
     stripe_donation_product_identifier = models.CharField('Stripe product identifier for donations', max_length=50, blank=False, null=False)
 
