@@ -18,7 +18,7 @@
   {% for department in departments %}
     <div class="col">
       <div href="{{ department.get_absolute_url }}" class="card mb-4">
-        <img src="{{ department.photo.url }}" class="card-img-top" alt="Photo of {{ department }}">
+        <img src="{{ department.photo.url }}" class="card-img-top d-none d-md-block" alt="Photo of {{ department }}">
         <div class="card-body">
           <h5 class="card-title">{{ department }}</h5>
 
