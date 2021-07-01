@@ -42,7 +42,7 @@ class UserAdmin(admin.ModelAdmin):
         }),
 
         ('Integrations', {
-            'fields': ('civicrm_identifier', 'civicrm_keyfob_code'),
+            'fields': ('membership_person_record', 'civicrm_identifier', 'civicrm_keyfob_code', 'civicrm_membership_status'),
         }),
 
         ('Advanced', {
@@ -62,6 +62,7 @@ class UserAdmin(admin.ModelAdmin):
             'sub',
             'civicrm_identifier',
             'civicrm_keyfob_code',
+            'civirm_membership_status',
         ]
 
     def get_urls(self):

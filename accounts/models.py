@@ -16,6 +16,10 @@ from uuid import uuid4
 from .civicrm import get_member_info, get_membership_status
 from dashboard.civicrm import profile_update_email
 
+from billing.util import api_get, api_patch
+
+import requests
+
 class ClubhouseUserManager(UserManager):
     def _sterilize_for_username(self, s):
         return re.sub(r'[^A-Za-z]', '', s).lower()
@@ -52,8 +56,27 @@ class ClubhouseUserManager(UserManager):
         u.save()
         return u
 
+    def import_member_from_billing_system(self, url):
+        # TODO: Once migration is complete, check if account already exists
+
+        person = api_get(url)
+        household = api_get(person['household'])
+
+        print(person)
+
+        u = User(
+            first_name=person['given_name'],
+            last_name=person['family_name'],
+            email=person['email'],
+            username=self._make_username(person['given_name'], person['family_name']),
+            membership_person_record = url,
+            stripe_customer_identifier = household['external_customer_identifier']
+        )
+        u.save()
+        return u
+
 class User(AbstractUser):
-    member_identifier = models.UUIDField(null=True, blank=True)
+    membership_person_record = models.URLField(null=True, blank=True)
     civicrm_identifier = models.PositiveIntegerField('identifier in civicrm', null=True, blank=True)
     sub = models.CharField('oidc identifier', max_length=100, unique=True, null=True, blank=True)
     civicrm_membership_status = models.CharField("membership status in civicrm", max_length=30, null=True, blank=True)
@@ -68,11 +91,26 @@ class User(AbstractUser):
         return ' '.join([self.first_name, self.last_name])
 
     @property
-    def is_current_member(self):
-        if not self.civicrm_membership_status:
+    def is_enrolled(self):
+        person = api_get(self.membership_person_record)
+        household = api_get(person['household'])
+
+        if not household['external_subscription_identifier']:
+            print('NO SUBSCRIPTION')
             return False
 
-        if self.civicrm_membership_status in ['Current', 'Grace', 'New']:
+        if household['status'] in ['expired', 'canceled']:
+            return False
+
+        print('USER IS ENROLLED')
+        return True
+
+    @property
+    def is_current_member(self):
+        if not self.membership_person_record:
+            return False
+
+        if self.civicrm_membership_status in ['active']:
             return True
 
         return False
@@ -209,25 +247,31 @@ class User(AbstractUser):
 
     ### CiviCRM ###
     def sync_membership_status(self):
-        if not self.civicrm_identifier: return
-        self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
+        person = api_get(self.membership_person_record)
+        household = api_get(person['household'])
+
+        self.civicrm_membership_status = household['status']
+
+        print(self.civicrm_membership_status)
+
         self.save()
 
     def sync_membership_info(self):
-        if not self.civicrm_identifier:
+        if not self.membership_person_record:
             return
 
-        info = get_member_info(self.civicrm_identifier)
-        self.first_name=info['first_name']
-        self.last_name=info['last_name']
-        self.email=info['email']
-        if 'keyfob' in info:
-            self.civicrm_keyfob_code = info['keyfob']
-        self.civicrm_membership_status = get_membership_status(self.civicrm_identifier)
+        person = api_get(self.membership_person_record)
+        household = api_get(person['household'])
+
+        self.first_name = person['given_name']
+        self.last_name = person['family_name']
+        self.civicrm_membership_status = household['status']
         self.save()
 
     def update_civicrm_with_email(self):
-        profile_update_email(self.civicrm_identifier, self.email)
+        api_patch(self.membership_person_record, json={
+            'email': self.email
+        })
 
 def two_weeks_from_now():
     return tz_now() + timedelta(days=14)

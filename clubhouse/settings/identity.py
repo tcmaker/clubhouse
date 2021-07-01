@@ -33,7 +33,7 @@ OIDC_CREATE_USER = False
 OIDC_USE_NONCE=False # We should use this, but turning it off eliminates bizarre login errors
 OIDC_TOKEN_USE_BASIC_AUTH=True # WARNING: Cognito broke when I disabled this, and I don't know why.
 
-LOGIN_REDIRECT_URL = '/dashboard/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'https://sso.tcmaker.org/logout?client_id=%s&logout_uri=https://tcmaker.org/' % os.environ['COGNITO_CLIENT_ID']
 LOGIN_URL='/accounts/login/'
 

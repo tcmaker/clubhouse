@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_bootstrap_breadcrumbs',
     'django_extensions',
+    'mathfilters',
     'sslserver', # self-signed ssl dev server for testing with cognito
     'localflavor',
     'mozilla_django_oidc',
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     # Mine
     'accounts.apps.AccountsConfig',
     'approvals.apps.ApprovalsConfig',
+    'billing.apps.BillingConfig',
     'consumables.apps.ConsumablesConfig',
     'dashboard.apps.DashboardConfig',
     'landing.apps.LandingConfig',

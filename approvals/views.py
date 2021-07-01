@@ -61,7 +61,7 @@ class RegistrationPendingKeyfobForm(ApprovalMixin, FormView):
     def form_valid(self, form):
         self.registration.keyfob_code = form.cleaned_data['keyfob_code']
         self.registration.save()
-        self.registration.add_civicrm_keyfob_code()
+        self.registration.upload_keyfob_to_billing_system()
         self.registration.keyfob_issued_at = tz_now()
         self.registration.save()
         return HttpResponseRedirect(urls.reverse('approvals:registration_pending_keyfob_list'))

@@ -1,0 +1,64 @@
+{% extends 'billing/index.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block title %}Change Dues Plan{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Change Dues Plan' 'billing:subscription_form' %}
+{% endblock %}
+
+{% block heading %}
+  Change Dues Plan
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <ul id="plan_selector_list" class="list-group list-group-flush">
+        <li class="list-group-item" data-enum="{{ form.ONE_MONTH_PLAN }}">
+          <div class="fw-bold">Monthly Plan</div>
+          <p>Pay $55.00 per month</p>
+        </li>
+        <li class="list-group-item" data-enum="{{ form.SIX_MONTH_PLAN }}">
+          <div class="fw-bold">Six-Month Plan</div>
+          <p>Pay $X every six months.</p>
+        </li>
+        <li class="list-group-item" data-enum="{{ form.TWELVE_MONTH_PLAN }}">
+          <div class="fw-bold">12-Month Plan</div>
+          <p>Pay $X every 12 months.</p>
+        </li>
+      </ul>
+      <div class="card-body">
+        <form id="plan_selector_form" method="POST">
+          {% csrf_token %}
+          <input id="plan_field" type="hidden" value="{{ form.plan.value|default_if_none:'' }}" name="plan" />
+          <input type="submit" value="Submit" class="btn btn-primary" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(function() {
+  $('#plan_selector_list>li').on("click", function(e) {
+    $('#plan_selector_list>li').each(function() {
+      $(this).removeClass('active');
+    });
+    $(this).addClass('active');
+    $('#plan_field').val($(this).data('enum'));
+  });
+
+  $('#plan_selector_list>li').each(function() {
+    if ($(this).data("enum") === $('#plan_field').val()) {
+      $(this).click();
+    }
+  });
+});
+</script>
+{% endblock %}

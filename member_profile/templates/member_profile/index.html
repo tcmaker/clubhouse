@@ -18,9 +18,9 @@
     <div class="card mb-4">
       <div class="card-header">Basic Information</div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>First Name:</strong> {{ request.user.first_name }}</li>
-        <li class="list-group-item"><strong>Last Name:</strong> {{ request.user.last_name }}</li>
-        <li class="list-group-item"><strong>Email:</strong> {{ request.user.email }}</li>
+        <li class="list-group-item"><strong>First Name:</strong> {{ profile.given_name }}</li>
+        <li class="list-group-item"><strong>Last Name:</strong> {{ profile.family_name }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ profile.email }}</li>
       </ul>
       <div class="card-body">
         <a href="/profile/basic/" class="card-link">Update</a>
@@ -33,11 +33,11 @@
       <div class="card-header">Address</div>
       <div class="card-body">
         <p>
-        {{ address.street_address }}<br>
-        {% if address.supplemental_address_1 %}
-        {{ address.supplemental_address_1 }}<br>
+        {{ profile.address_street1 }}<br>
+        {% if profile.address_street2 %}
+          {{ address.address_street2 }}<br>
         {% endif %}
-        {{ address.city }}, {{ state_province_abbreviation }} {{ address.postal_code }}
+        {{ profile.address_city }}, {{ profile.address_state }} {{ profile.address_zip }}
         </p>
         <a href="/profile/address/" class="card-link">Update</a>
       </div>
@@ -51,9 +51,9 @@
     <div class="card mb-4">
       <div class="card-header">Phone</div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Phone Number:</strong> {{ phone.phone }}</li>
+        <li class="list-group-item"><strong>Phone Number:</strong> {{ profile.phone_number }}</li>
         <li class="list-group-item"><strong>Can Receive SMS:</strong>
-          {% if phone.phone_type_id == '2' %}
+          {% if profile.phone_can_receive_sms %}
             yes
           {% else %}
             no
@@ -71,15 +71,15 @@
       <div class="card-header">Emergency Contact</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>Name:</strong>
-          {% if emergency_contact_info.name %}
-            {{ emergency_contact_info.name }}
+          {% if profile.emergency_contact_name %}
+            {{ profile.emergency_contact_name }}
           {% else %}
             <em>none</em>
           {% endif %}
         </li>
         <li class="list-group-item"><strong>Phone:</strong>
-          {% if emergency_contact_info.phone %}
-            {{ emergency_contact_info.phone }}
+          {% if profile.emergency_contact_phone %}
+            {{ profile.emergency_contact_phone }}
           {% else %}
             <em>none</em>
           {% endif %}
