@@ -176,4 +176,4 @@ def get_membership_status(contact_id):
     if status_id == 6: return 'Expired' # It's canceled, but those are the same to us
 
     # It's none of the ones we care about
-    return None
+    return 'No Membership'
