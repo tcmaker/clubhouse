@@ -4,27 +4,29 @@ from ..models import Invitation, User
 from django.contrib import messages
 from signup.models import Registration
 
-from .. import civicrm
-
 def accept(request):
-    try:
-        if 'code' not in request.GET: raise Exception('Code parameter missing.')
-        # Search for an onboarding email
-        invitation = None
-        if Invitation.objects.filter(uuid=request.GET['code']).exists():
-            invitation = Invitation.objects.get(uuid=request.GET['code'])
-        elif Registration.objects.filter(uuid=request.GET['code']).exists():
-            invitation = Registration.objects.get(uuid=request.GET['code'])
-            u = User.objects.import_member_by_contact_id(invitation.civicrm_identifier)
-            invitation.user_id = u.id
-            invitation.save()
-        else:
-            raise Exception('Invalid Code')
-        request.session['user_id'] = invitation.user.id
-        return redirect('/accounts/onboard/password/')
-    except ValueError as e:
-        messages.error(request, 'invalid code')
-        return render(request, 'accounts/onboarding/error.html', {})
+
+    if 'code' not in request.GET: raise Exception('Code parameter missing.')
+    if Registration.objects.filter(uuid=request.GET['code']).exists():
+        registration = Registration.objects.get(uuid=request.GET['code'])
+        # TODO: Import membership info from membership system
+        u = User.objects.import_member_from_billing_system(registration.membership_person_record)
+        registration.user_id = u.id
+        registration.save()
+    else:
+        raise Exception('Invalid Code')
+    request.session['user_id'] = u.id
+    return redirect('/accounts/onboard/password/')
+
+    # messages.error(request, 'invalid code')
+    # return render(request, 'accounts/onboarding/error.html', {})
+
+
+
+    # TODO: Create Clubhouse account from membership data
+    # TODO: Update Registration object with Account pkey
+    # TODO: Save Registration object
+    # TODO: Redirect to '/accounts/onboard/password'
 
 def set_password(request):
     if 'user_id' not in request.session:

@@ -16,7 +16,7 @@
       now, so that we can send out your keyfob as soon as we possibly can.
     </p>
 
-    <form id="payment_form" method="POST" data-stripe-publishable-key="{{ form.STRIPE_PUBLISHABLE_KEY }}">
+    <form id="payment_form" method="POST" data-stripe-publishable-key="{{ STRIPE_PUBLISHABLE_KEY }}">
       {% csrf_token %}
       <div class="card mb-4">
         <div class="card-body">
@@ -42,5 +42,5 @@
 {% endblock %}
 
 {% block javascript %}
-  <script src="{% static 'js/stripe.js' %}"></script>
+  <script src="{% static 'js/signup_stripe.js' %}"></script>
 {% endblock %}

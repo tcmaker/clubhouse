@@ -99,9 +99,6 @@ class AccountView(SignupWizardView):
         registration.basic_info_collected_at = tz_now()
         registration.save()
 
-        # Update CiviCRM
-        registration.create_civicrm_contact()
-
 class ContactView(SignupWizardView):
     view_template = 'signup/contact.html'
     form_class = ContactForm
@@ -120,11 +117,6 @@ class ContactView(SignupWizardView):
         registration.emergency_contact_phone = form.cleaned_data['emergency_contact_phone']
         registration.contact_info_collected_at = tz_now()
         registration.save()
-
-        # Update CiviCRM
-        registration.add_civicrm_address()
-        registration.add_civicrm_phone()
-        registration.add_civicrm_emergency_info()
 
 class SetupFeeView(SignupWizardView):
     view_template = 'signup/card.html'
@@ -167,8 +159,6 @@ class SetupFeeView(SignupWizardView):
             customer.source = form.cleaned_data['stripe_token']
             customer.save()
 
-            import code; code.interact(local=dict(globals(), **locals()))
-
             # Charge $20.00
             charge = stripe.Charge.create(
                 customer = customer.id,
@@ -197,6 +187,7 @@ class LiabilityWaiverView(SignupWizardView):
         progress = self.signup_progress(request.session)
         progress.liability_waiver_accepted_at = tz_now()
         progress.save()
-        progress.civicrm_accept_liability_waiver()
         progress.application_completed_at = tz_now()
         progress.save()
+        # Final step
+        progress.upload_to_billing_system()

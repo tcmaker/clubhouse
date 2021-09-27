@@ -1,0 +1,40 @@
+{% extends 'billing/index.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block title %}{{ household.name }}{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb household.name 'billing:administered_household_list' %}
+{% endblock %}
+
+{% block heading %}
+  {{ household.name }}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<h3>Household Information</h3>
+<div class="card mb-4">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Name:</strong> {{ household.name }}</li>
+    <li class="list-group-item"><strong>Key:</strong> Value</li>
+    <li class="list-group-item"><strong>Key:</strong> Value</li>
+    <li class="list-group-item"><strong>Key:</strong> Value</li>
+  </ul>
+  <div class="card-body">
+    <a class="btn btn-primary" href="">Edit</a>
+  </div>
+</div>
+
+<h3>Dues Information</h3>
+<div class="card mb-4">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Dues Schedule:</strong> Monthly</li>
+    <li class="list-group-item"><strong>Collection Method:</strong> Autopay</li>
+  </ul>
+  <div class="card-body">
+    <a class="btn btn-primary" href="">Edit</a>
+  </div>
+</div>
+{% endblock %}

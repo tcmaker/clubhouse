@@ -1,0 +1,33 @@
+{% extends 'billing/index.html' %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block title %}Households{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% breadcrumb 'Households' 'billing:administered_household_list' %}
+{% endblock %}
+
+{% block heading %}
+  Households
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+{% for household in households %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ household.name }}</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Status:</strong> {{ household.status }}</li>
+      <li class="list-group-item"><strong>Valid Through:</strong> {{ household.valid_through }}</li>
+    </ul>
+    <div class="card-body">
+      <a href="#" class="btn btn-primary">Details</a>
+    </div>
+  </div>
+{% empty %}
+<p>You do not administer any households.</p>
+{% endfor %}
+{% endblock %}

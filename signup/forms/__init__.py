@@ -8,8 +8,6 @@ from ..validators import validate_auth0_password
 from django.conf import settings
 import stripe
 
-# from membership.models import PaymentPlan, SIGNUP_PAYMENT_METHODS
-
 class AccountForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -72,18 +70,6 @@ class ContactForm(forms.Form):
     )
     emergency_contact_phone = PhoneNumberField(region='US')
 
-# class DuesForm(forms.Form):
-#     dues_plan = forms.ModelChoiceField(
-#         label="Dues Plan",
-#         queryset=PaymentPlan.objects.order_by('sort_priority').all(),
-#         empty_label=None
-#     )
-#
-#     payment_method = forms.ChoiceField(
-#         label="Payment Method",
-#         choices=SIGNUP_PAYMENT_METHODS
-#     )
-#
 class StripeForm(forms.Form):
     STRIPE_PUBLISHABLE_KEY = settings.STRIPE_PUBLISHABLE_KEY
     stripe_token = forms.CharField(widget=forms.HiddenInput())
