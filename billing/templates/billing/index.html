@@ -49,7 +49,7 @@
           {{ household.stripe_subscription.price.recurring.interval }}s
         </li>
         <li class="list-group-item"><strong>Collection Method:</strong>
-          {% if household.autopay %}
+          {% if household.auto_renew %}
             We automatically bill your credit card.
           {% else %}
             We send you an invoice each month.
@@ -57,12 +57,16 @@
         </li>
       {% endif %}
     </ul>
-    {% if household.contact.url == request.user.membership_person_record %}
+    {% if household.contact.url == request.user.membership_person_record and False %}
       <div class="card-body">
         <a href="/billing/households/{{ household.uuid }}/" class="btn btn-primary">View and Edit</a>
       </div>
     {% endif %}
   </div>
+{% endif %}
+
+{% if household.contact.url == request.user.membership_person_record and household.external_subscription_identifier != '54321' %}
+  <a class="btn btn-primary" href="/billing/enroll/">Migrate to New Billing System</a>
 {% endif %}
 
 {% if student_team %}

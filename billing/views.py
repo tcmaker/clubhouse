@@ -254,6 +254,7 @@ def enroll_autopay_form(request, person, household):
                     subscription = _stripe_create_autopay_subscription(request, form)
                     api_patch(household['url'], {
                         'external_customer_identifier': request.user.stripe_customer_identifier,
+                        'auto_renew': True,
                         'external_subscription_identifier': subscription.id,
                     })
                     messages.success(request, 'Your subscription has been created.')
@@ -280,14 +281,20 @@ def enroll_autopay_form(request, person, household):
         'form': form
     })
 
+@login_required
 @uses_stripe
-def enroll_invoice_form(request):
+@uses_person_record
+@uses_household_record
+def enroll_invoice_form(request, person, household):
     if request.method == 'POST':
         form = EnrollForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data['plan'])
             subscription = _stripe_create_invoiced_subscription(request, form)
-
+            api_patch(household['url'], {
+                'external_customer_identifier': request.user.stripe_customer_identifier,
+                'external_subscription_identifier': subscription.id,
+            })
             messages.success(request, 'Your subscription has been created. Check your email for your invoice.')
             request.session['temporarily_allow_access'] = True
 
@@ -296,7 +303,9 @@ def enroll_invoice_form(request):
 
             return redirect('/')
     else:
-        form = EnrollForm()
+        form = EnrollForm(initial={
+            'plan': AutoPayEnrollForm.ONE_MONTH_PLAN,
+        })
 
     return render(request, 'billing/enroll_form.html', {
         'form': form
