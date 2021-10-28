@@ -64,9 +64,10 @@ def _enrich_household(household: dict) -> dict:
         # Subscription info from Stripe
         stripe.api_key = settings.STRIPE_SECRET_KEY
         s = {}
-        s['subscription'] = stripe.Subscription.retrieve(household['external_subscription_identifier'])
-        s['price'] = s['subscription']['items']['data'][0]['price']
-        household['stripe_subscription'] = s
+        if household['external_subscription_identifier'] != '54321':
+            s['subscription'] = stripe.Subscription.retrieve(household['external_subscription_identifier'])
+            s['price'] = s['subscription']['items']['data'][0]['price']
+            household['stripe_subscription'] = s
     return household
 
 #### Manage Households ####
