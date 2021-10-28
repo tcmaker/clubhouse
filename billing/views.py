@@ -50,11 +50,14 @@ def uses_household_record(view_func):
 def _enrich_household(household: dict) -> dict:
     household['uuid'] = uuid_from_url(household['url'])
     dt = household['valid_through']
-    # Hack, because I can't get strptime to handle the UTC offset correctly
-    # See: https://bugs.python.org/issue15873, https://bugs.python.org/msg169952
-    if ":" == dt[-3:-2]:
-        dt = dt[:-3]+dt[-2:]
-    household['valid_through'] = datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S%z')
+
+    if dt is not None:
+        # Hack, because I can't get strptime to handle the UTC offset correctly
+        # See: https://bugs.python.org/issue15873, https://bugs.python.org/msg169952
+        if ":" == dt[-3:-2]:
+            dt = dt[:-3]+dt[-2:]
+        dt = datetime.strptime(dt, '%Y-%m-%dT%H:%M:%S%z')
+    household['valid_through'] = dt
 
     # Fetch the person record for the contact (admin) of the household
     household['contact'] = api_get(household['contact'])
