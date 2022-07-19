@@ -75,8 +75,8 @@ class SignupWizardView(View):
         if not progress.contact_info_collected_at:
             return steps.CONTACT_INFO_STEP
 
-        if not progress.paid_setup_fee_at:
-            return steps.PAYMENT_CARD_STEP
+        #if not progress.paid_setup_fee_at:
+            #return steps.PAYMENT_CARD_STEP
 
         if not progress.liability_waiver_accepted_at:
             return steps.LEGAL_STEP
