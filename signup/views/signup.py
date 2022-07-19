@@ -116,6 +116,28 @@ class ContactView(SignupWizardView):
         registration.emergency_contact_name = form.cleaned_data['emergency_contact_name']
         registration.emergency_contact_phone = form.cleaned_data['emergency_contact_phone']
         registration.contact_info_collected_at = tz_now()
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        # If payment failed, the customer identifier will already exist.
+        # Don't create one if you don't have to.
+        if not registration.stripe_identifier:
+            customer = stripe.Customer.create(
+                name = ', '.join([
+                    registration.family_name,
+                    registration.given_name,
+                ]),
+                email = registration.email
+            )
+            registration.stripe_identifier = customer.id
+            registration.save()
+
+        # https://stripe.com/docs/api/idempotent_requests
+        if 'stripe-idempotency-key' not in request.session:
+            print("setting idempotency key")
+            request.session['stripe-idempotency-key'] = str(uuid.uuid4())
+        else:
+            print("Found idempotency key: %s" % request.session['stripe-idempotency-key'])
+
         registration.save()
 
 class SetupFeeView(SignupWizardView):
