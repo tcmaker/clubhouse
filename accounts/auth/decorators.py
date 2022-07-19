@@ -11,7 +11,7 @@ def membership_required(view_func):
             return view_func(request, *args, **kwargs)
 
         # Allow inactive users to access the billing section
-        if request.user.is_inactive_member and request.path.startswith('/billing/')
+        if request.user.is_inactive_member and request.path.startswith('/billing/'):
             return view_func(request, *args, **kwargs)
 
         if not request.user.is_current_member and 'temporarily_allow_access' not in request.session:
