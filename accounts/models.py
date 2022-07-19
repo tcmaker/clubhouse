@@ -115,6 +115,16 @@ class User(AbstractUser):
 
         return False
 
+    @property
+    def is_inactive_member(self):
+        if not self.membership_person_record:
+            return False
+
+        if self.civicrm_membership_status in ['Expired', 'canceled', 'past_due', 'unpaid', 'incomplete_expired', 'incomplete', 'Grace']:
+            return True
+
+        return False
+
     def set_pending_email_and_verify(self, email_address):
         self.pending_email = email_address
         self.pending_email_verification_code = uuid4()
