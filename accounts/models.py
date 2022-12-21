@@ -62,6 +62,9 @@ class ClubhouseUserManager(UserManager):
         person = api_get(url)
         household = api_get(person['household'])
 
+        if household is None:
+            household = api_get(person['student_team'])
+
         print(person)
 
         u = User(
