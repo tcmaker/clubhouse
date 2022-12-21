@@ -64,7 +64,7 @@ class ClubhouseUserManager(UserManager):
         if person['household'] is not None:
             household = api_get(person['household'])
 
-        if household is None:
+        if person['household'] is None:
             household = api_get(person['student_team'])
             household['external_customer_identifier'] = None
 
