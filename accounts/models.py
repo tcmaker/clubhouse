@@ -60,7 +60,9 @@ class ClubhouseUserManager(UserManager):
         # TODO: Once migration is complete, check if account already exists
 
         person = api_get(url)
-        household = api_get(person['household'])
+
+        if person['household'] is not None:
+            household = api_get(person['household'])
 
         if household is None:
             household = api_get(person['student_team'])
