@@ -99,6 +99,14 @@ class User(AbstractUser):
     @property
     def is_enrolled(self):
         person = api_get(self.membership_person_record)
+
+        # student teams don't go through the standard checks
+        if person['student_team'] is not None:
+            team = api_get(person['student_team'])
+            if team['status'] in ['expired', 'canceled']:
+                return False
+            return True
+
         household = api_get(person['household'])
 
         if not household['external_subscription_identifier']:
