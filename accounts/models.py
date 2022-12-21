@@ -264,7 +264,10 @@ class User(AbstractUser):
     ### CiviCRM ###
     def sync_membership_status(self):
         person = api_get(self.membership_person_record)
-        household = api_get(person['household'])
+        if person['household'] is not None:
+            household = api_get(person['household'])
+        else:
+            household = api_get(person['student_team'])
 
         self.civicrm_membership_status = household['status']
 
